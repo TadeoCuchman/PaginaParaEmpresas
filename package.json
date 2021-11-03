@@ -1,0 +1,37 @@
+{
+  "name": "setadolapi",
+  "version": "1.0.0",
+  "description": "Aplicación web para uso exclusivo de Setadol SA",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "react-scripts build",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/TadeoCuchman/SetadolApi"
+  },
+  "keywords": [],
+  "author": "Tadeo Cuchman",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/TadeoCuchman/SetadolApi/issues"
+  },
+  "homepage": "https://github.com/TadeoCuchman/SetadolApi#readme",
+  "dependencies": {
+    "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
+    "cors": "^2.8.5",
+    "crypto": "^1.0.1",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jslint": "^0.12.1",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.7.1"
+  },
+  "devDependencies": {
+    "gh-pages": "^3.2.3"
+  }
+}
