@@ -1,0 +1,55 @@
+aside {
+  position: absolute;
+  background-color: var(--bg);
+  width: 30%;
+  height: 100vh;
+  z-index: 1;
+  border-right: var(--border);
+  border-radius: var(--border-radius);
+  display: grid;
+  grid-template-areas:
+    "navSpace"
+    "profilAside"
+    "linksAside"
+    "navSpace";
+  grid-template-rows: 80px 0.8fr 3fr 20px;
+  grid-template-columns: 100%;
+  overflow: hidden;
+}
+
+.profilAside {
+  display: grid;
+  align-items: start;
+  justify-items: center;
+  border: var(--border);
+}
+
+.midAside {
+  border: var(--border);
+  overflow: scroll;
+  padding-top: 5%;
+  padding-left: 10%;
+  overflow: auto;
+}
+
+.midAside ul {
+  display: grid;
+  align-items: start;
+  margin-left: 20px;
+}
+
+.midAside ul li {
+  margin-top: 15%;
+  margin-right: 40px;
+  color: white;
+  cursor: pointer;
+}
+
+.midAside ul li:hover {
+  padding-left: 5%;
+}
+
+.asideLink:hover {
+  background-color: #484a4d;
+  border-radius: 10px;
+}

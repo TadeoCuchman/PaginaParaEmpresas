@@ -1,0 +1,23 @@
+footer {
+  display: grid;
+  position: relative;
+  overflow: hidden;
+  grid-area: footer;
+  text-align: center;
+  background-color: var(--bg);
+  border-top: var(--border);
+  border-bottom: 1px solid black;
+  z-index: 10;
+}
+
+footer ul {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 20px;
+}
+
+footer li {
+  color: white;
+  font-size: 15px;
+  padding-bottom: 3px;
+}
