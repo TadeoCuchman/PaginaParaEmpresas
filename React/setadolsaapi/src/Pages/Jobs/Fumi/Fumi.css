@@ -1,0 +1,108 @@
+#main_Fumi {
+  display: grid;
+  grid-template-areas:
+    "title title"
+    "info addButtons";
+  grid-template-rows: 50px 1fr;
+  grid-template-columns: 5fr 1fr;
+}
+
+#main_Fumi h1 {
+  margin-top: 20px;
+  grid-area: title;
+}
+
+#form-NewFumi {
+  display: grid;
+  justify-items: center;
+}
+
+#main_Fumi input {
+  padding: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+  text-align: left;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  border-radius: var(--border-radius);
+}
+
+/* Lista de Entradas Hechas */
+
+.info {
+  margin-left: 20px;
+  margin-top: 20px;
+  grid-area: info;
+  border: var(--border);
+  overflow: scroll;
+  background-color: white;
+  border-radius: var(--border-radius);
+}
+
+/* Parte Botones y popup */
+
+.addButtons {
+  grid-area: addButtons;
+}
+
+.addButtons button {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+}
+
+.addButtons button:hover {
+  transform: scale(1.1, 1.1);
+  filter: brightness(1.2);
+}
+
+.popUp_div {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: #9c9da3c0;
+  display: grid;
+  justify-items: center;
+  align-items: center;
+}
+
+.closeAddPopup {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  width: 35px;
+  height: 35px;
+  border: var(--border);
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+  background-color: #484a4d;
+  color: white;
+}
+
+.closeAddPopup:hover {
+  filter: brightness(1.2);
+}
+
+.popUp_div form {
+  position: fixed;
+  width: 85%;
+  height: 70%;
+  background-color: #bbbdc3;
+  border: var(--border);
+  border-radius: var(--border-radius);
+  justify-items: center;
+  overflow: scroll;
+  margin-bottom: 10%;
+}
+
+.popUp_div form input {
+  width: 70%;
+  height: 2%;
+  margin: 0;
+  margin-bottom: 15px;
+}
+
+.popUp_div form button {
+  margin-bottom: 20px;
+}

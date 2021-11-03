@@ -1,0 +1,58 @@
+.siloInfo_div {
+  display: grid;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  justify-items: center;
+  align-items: center;
+  top: 0;
+  background-color: #9c9da3c0;
+}
+
+.silosInfo {
+  position: absolute;
+  width: 85%;
+  height: 80%;
+  top: 120px;
+  background-color: #bbbdc3;
+  display: grid;
+  justify-items: center;
+  align-content: start;
+  overflow: scroll;
+  border: var(--border);
+  padding-top: 50px;
+  overflow: scroll;
+}
+
+.silosInfo button {
+  right: 10px;
+  top: 10px;
+  width: 35px;
+  height: 35px;
+  border: var(--border);
+  border-radius: var(--border-radius);
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+  background-color: #484a4d;
+  color: white;
+}
+
+.siloInfo {
+  border: var(--border);
+  border-radius: var(--border-radius);
+  margin: 5px;
+}
+
+.siloInfo input {
+  padding: 0px;
+  width: 10%;
+  height: 30px;
+  margin-left: 10px;
+  margin-right: 20px;
+  text-align: center;
+}
+
+#cantidadDeSilos {
+  width: 30px;
+}

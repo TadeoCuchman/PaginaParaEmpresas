@@ -1,0 +1,6 @@
+.contact {
+  margin-top: 20px;
+  border-radius: var(--border-radius);
+  border: var(--border);
+  padding: 10px;
+}
