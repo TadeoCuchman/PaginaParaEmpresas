@@ -16,6 +16,7 @@ import './Pages/Clients/Clients.css'
 import './Pages/Workers/NewWorker/NewWorker.css'
 import './Pages/Users/Users.css'
 import './Pages/Clients/Contacts/Contacts.css'
+import './Pages/Places/Places.css'
 
 import Nav from './Components/Nav'
 import Aside from './Components/Aside'
@@ -24,7 +25,7 @@ import Main from './Components/Main'
 import Applications from './Components/Applications';
 import NewClient from './Pages/Clients/NewClient/NewClient';
 import NewPlace from './Pages/Places/NewPLace/NewPLace'
-import NewFumi from './Pages/Jobs/Fumi/NewFumi'
+import NewJob from './Pages/Jobs/NewJob'
 import ChooseFumi from './Pages/Jobs/Fumi/ChooseFumi'
 import Fumi from './Pages/Jobs/Fumi/Fumi'
 import CloseJob from './Pages/Jobs/CloseJob'
@@ -104,6 +105,9 @@ function App() {
          
           {//agregar a base de datos informacion para pedidos en tiempo real
           }
+          <Route path='/NewJob'>
+            <NewJob />
+          </Route>
           <Route path='/CloseJob'>
             <CloseJob />
           </Route>
@@ -127,13 +131,11 @@ function App() {
 
           {//gestios para fumigaciones
           }
-          <Route path='/NewFumi'>
-            <NewFumi />
-          </Route>
+
           <Route path='/ChooseFumi'>
             <ChooseFumi/>
           </Route>
-          <Route exact path='/Fumi/:id' component={Fumi}>
+          <Route exact path='/Fumi/:id'>
             <Fumi/>
           </Route>
 
