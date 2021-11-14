@@ -8,6 +8,9 @@ const NewUser = () => {
     const [rol, setRol] = useState('')
     const [password, setPassword] = useState('')
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+      };
     
     const postNewUser = () => {
         const newUser = {
@@ -31,7 +34,11 @@ const NewUser = () => {
               if (res.success === false) {
                   alert (res.message);
               } else {
-                  alert (res.message);                 
+                  alert (res.message); 
+                  setUser('');
+                  setPassword(''); 
+                  setMail('');  
+                  setRol('');              
               }
             })
         }
@@ -39,15 +46,15 @@ const NewUser = () => {
     return (
         <main>
             <br />
-            <h1>Register</h1>
+            <h1>Registrar Nuevo Usuario:</h1>
             <br />
-            <form method="POST" action="javascript:void(0);" className="forms">
+            <form method="POST" className="forms" onSubmit={handleSubmit}>
                 <p>Email*:</p>
-                <input className="logs" id="rmail" type="email" name="rmail" placeholder="Ingresar Mail"  onChange={(e) => setMail(e.target.value)}/>
+                <input className="logs" id="rmail" type="email" name="rmail" placeholder="Ingresar Mail" value={mail} onChange={(e) => setMail(e.target.value)}/>
                 <p>Nombre de Usuario*:</p>
-                <input className="logs" id="rname" type="text" name="rname" placeholder="Ingresar Usuario"  onChange={(e) => setUser(e.target.value)}/>
+                <input className="logs" id="rname" type="text" name="rname" placeholder="Ingresar Usuario"  value={user} onChange={(e) => setUser(e.target.value)}/>
                 <p>Contraseña*:</p>
-                <input className="logs" id="rpassword" type="password" name="rpassword" placeholder="Ingresar Contraseña"  onChange={(e) => setPassword(e.target.value)}/>
+                <input className="logs" id="rpassword" type="password" name="rpassword" placeholder="Ingresar Contraseña" value={password} onChange={(e) => setPassword(e.target.value)}/>
                 <br />
                 <span>Rol*:</span>
                 <br />

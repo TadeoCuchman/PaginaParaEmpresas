@@ -6,26 +6,31 @@ const Users = () => {
     const [allUsers, setAllUsers] = useState([])
     const [editUserPopup, setEditUserPopUp] = useState(false)
     const [selected, setSelected] = useState(-1)
-
+    
  
     useEffect(() => {
         chargeUsers()
     }, [])
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+      };
 
-    const chargeUsers = () => {
-        fetch('http://localhost:3333/users/allUsers', {
-            method: "GET",
-            headers: {
-                "Content-Type" : "application/json",
-                "auth-token" : localStorage.getItem("jwt")
-            },
-            }).then(response => response.json())
-            .then(data => setAllUsers(data.array))
+
+    const chargeUsers = async () => {
+        try{
+            await fetch('http://localhost:3333/users/allUsers', {
+                method: "GET",
+                headers: {
+                    "Content-Type" : "application/json",
+                    "auth-token" : localStorage.getItem("jwt")
+                },
+                }).then(response => response.json())
+                .then(data => setAllUsers(data.array))
+        }catch (err) {
+            alert('No conexión con Servidor')
         }
-
-
-
+    }
 
 
     const User = (props) => {
@@ -44,18 +49,20 @@ const Users = () => {
     }
 
     const EditPopUp = () => {
-        const [name, setName] = useState('' || allUsers[selected].name)
-        const [mail, setMail] = useState('' || allUsers[selected].mail)
-        const [rol, setRol] = useState('' || allUsers[selected].rol) 
+        const result = allUsers.find(user => user.id === selected)
 
-        const modifyUser = (a) => {
+        const [name, setName] = useState('' || result.name)
+        const [mail, setMail] = useState('' || result.mail)
+        const [rol, setRol] = useState('' || result.rol) 
+
+        const modifyUser = async (a) => {
             const modifyBody = {
                 name,
                 mail,
                 rol
             }
-            
-            fetch(`http://localhost:3333/users/${a}`, {
+            try {
+            await fetch(`http://localhost:3333/users/${a}`, {
                     method: 'PUT',
                     headers: {
                         "Content-Type" : "application/json",
@@ -71,13 +78,16 @@ const Users = () => {
                     chargeUsers()
                     setEditUserPopUp(false)
                 })
+            } catch (err) {
+                alert('Falló el Servidor')
+            }
         }
         
         return (
             <div id="editUserPopUpDiv">
-                <button onClick={() => setEditUserPopUp(false)}>X</button>
+                <button id="cerrarInfo" onClick={() => setEditUserPopUp(false)}>X</button>
                 <br />
-                <form action="PUT" action="javascript:void(0);">
+                <form action="PUT" onSubmit={handleSubmit}>
                     <span>Nombre:</span>
                     <br />
                     <input type="text" value={name} onChange={(e) => setName(e.target.value)}/>
@@ -88,7 +98,12 @@ const Users = () => {
                     <br />
                     <span>Rol:</span>
                     <br />
-                    <input type="text" value={rol} onChange={(e) => setRol(e.target.value)}/>
+                    <select onChange={(e) => setRol(e.target.value)}>
+                        <option selected disabled value="" >Elegir Rol</option>
+                        <option value="operario">Operario</option>
+                        <option value="administrativo">Administrativo</option>
+                        <option value="admin">Admin</option>
+                    </select>
                     <br />
                     <br />
                     <input type="submit" id="submit" onClick = { () =>  modifyUser(selected)} /> 
@@ -102,18 +117,19 @@ const Users = () => {
         
         if (users){
             return(
-                <div id='users'>
-                    { users.map((user => {
+                <ul id='users'>
+                    { users.map(((user, key)=> {
                         return ( <User
+                            id={user.id}
+                            key={key}
                             name={user.name}
                             mail={user.mail}
                             rol={user.rol}
-                            id={user.id}
                             selected={user.id === selected}
                             setSelected={setSelected}
                             />)
                     }))}
-                </div>
+                </ul>
             )
         } else { return[] }
     }

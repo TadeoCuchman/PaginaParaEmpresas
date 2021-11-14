@@ -53,7 +53,7 @@ router.post('/register', verifyToken, async (req, res) => {
     }
       
   } catch (err) {
-    return res.json({ success: false, message: 'Error con la conexión con la Base de Datos' + JSON.stringify(err)})
+    return res.json({ success: false, message: 'Error con la conexión con la Base de Datos' + JSON.stringify(err)}).status(500)
   }
 
 });
@@ -85,7 +85,7 @@ router.post('/login', async (req, res) => {
   res.json({ error: null, message: 'Loggin Exitoso.', token, user: array[0] }).status(200);
  
 } catch (err) {
-  return res.json({ success: false, message: 'Error en conexión con Base de Datos.' + JSON.stringify(err)})
+  return res.json({ success: false, message: 'Error en conexión con Base de Datos.' + JSON.stringify(err)}).status(500)
  }
 });
   
@@ -99,7 +99,7 @@ router.get('/allUsers', verifyToken, async (req, res) => {
     return res.json({ success: true, message: 'Every User', array}).status(200)
 
   } catch (err) {
-    return res.json({ success: false, message: 'Error with database looking for all users' + JSON.stringify(err)})
+    return res.json({ success: false, message: 'Error with database looking for all users' + JSON.stringify(err)}).status(500)
   }
 });
 
@@ -108,7 +108,7 @@ router.put('/:id', verifyToken, async (req, res) => {
   try {
     const changeUser = await pool.query('SELECT * FROM users WHERE id = $1', [req.params.id])
     const array = changeUser.rows
-    if (array.length > 0 ){
+    if (array.length > 0){
       const user = await pool.query('UPDATE users SET name = $1, mail = $2, rol = $3 WHERE id = $4', [req.body.name, req.body.mail, req.body.rol, req.params.id])
       
       return res.json({ success: true, message:' Actualización Exitosa', user})
@@ -117,7 +117,7 @@ router.put('/:id', verifyToken, async (req, res) => {
     }
 
   } catch (err) {
-    return res.json({ success: false, message:"No conexión con Base de Datos." + JSON.stringify(err) });
+    return res.json({ success: false, message:"No conexión con Base de Datos." + JSON.stringify(err) }).status(500)
   }
 })
 
