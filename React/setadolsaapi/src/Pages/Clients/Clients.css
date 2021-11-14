@@ -1,0 +1,12 @@
+#clients {
+  display: grid;
+  justify-content: center;
+  list-style: none;
+}
+
+.client {
+  margin-top: 20px;
+  border-radius: var(--border-radius);
+  border: var(--border);
+  padding: 10px;
+}

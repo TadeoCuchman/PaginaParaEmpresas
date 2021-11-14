@@ -15,7 +15,7 @@ router.get('/allClients', verifyToken, async (req, res) => {
         return res.json({ success: true, message: 'Todos los Clientes', array}).status(200)
     
       } catch (err) {
-        return res.json({ success: false, message: 'Error en conexión con Base de Datos.' + JSON.stringify(err)}).status(400)
+        return res.json({ success: false, message: 'Error en conexión con Base de Datos.' + JSON.stringify(err)}).status(500)
       }
 })
 
@@ -45,8 +45,26 @@ router.post('/newClient', verifyToken, async (req, res) => {
         }
 
     } catch (err) {
-        return res.json({ success: false, message: 'Error con la conexión con la Base de Datos' + JSON.stringify(err)}).status(400)
+        return res.json({ success: false, message: 'Error con la conexión con la Base de Datos' + JSON.stringify(err)}).status(500)
     }
+})
+
+router.put('/:id', verifyToken, async (req, res) => {
+    try{
+        const changeClient = await pool.query('SELECT * FROM clientes WHERE id = $1',[req.params.id])
+        const array = changeClient.rows
+        if (array.length > 0){
+            const client = await pool.query('UPDATE clientes SET razon_social = $1, nombre_fantasia = $2, rut = $3 WHERE id = $4',[req.body.razon_social, req.body.nombre_fantasia, req.body.rut, req.params.id])
+            return res.json({ success: true, message:' Actualización Exitosa', client})
+
+        } else {
+            return res.json({ success: false, message:"Cliente no encontrado."})
+        }
+
+    } catch (err) {
+        return res.json({ success: false, message:"No conexión con Base de Datos." + JSON.stringify(err) }).status(500)
+    }
+    
 })
 
 
