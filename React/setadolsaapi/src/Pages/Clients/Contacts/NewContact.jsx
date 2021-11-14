@@ -10,11 +10,16 @@ const NewContact = () => {
     const [cel, setCel] = useState('')
     const [tel, setTel] = useState()
     const [rol, setRol] = useState('')
-    
+
+
     const [workPlace, setWorkPlace] = useState('')
     const [allClients, setAllClients] = useState([])
     const [allPlaces, setAllPlaces] = useState([])
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+      };
+    
 
     useEffect(() => {
         chargeClients()
@@ -22,40 +27,49 @@ const NewContact = () => {
     }, [])
 
 
-    const chargeClients = () => {
-        fetch('http://localhost:3333/clients/allClients', {
-          method: "GET",
-          headers: {
-              "Content-Type" : "application/json",
-              "auth-token" : localStorage.getItem("jwt")
-          },
-          }).then(response => response.json())
-          .then(data => setAllClients(data.array))
-    }
-    
-    const chargePlaces = () => {
-        fetch('http://localhost:3333/places/allPlaces', {
-            method: "GET",
-            headers: {
-                "Content-Type" : "application/json",
-                "auth-token" : localStorage.getItem("jwt")
-            },
-            }).then(response => response.json())
-            .then(data => setAllPlaces(data.array))
+    const chargeClients = async () => {
+        try{
+            await fetch('http://localhost:3333/clients/allClients', {
+                method: "GET",
+                headers: {
+                    "Content-Type" : "application/json",
+                    "auth-token" : localStorage.getItem("jwt")
+                },
+                }).then(response => response.json())
+                .then(data => setAllClients(data.array))
+        }catch (err) {
+            alert(err);
+            }
+      }
+      
+    const chargePlaces = async () => {
+        try{
+            await fetch('http://localhost:3333/places/allPlaces', {
+                method: "GET",
+                headers: {
+                    "Content-Type" : "application/json",
+                    "auth-token" : localStorage.getItem("jwt")
+                },
+                }).then(response => response.json())
+                .then(data => setAllPlaces(data.array))
+        }catch (err) {
+        alert(err);
+        }
     }
 
-    const postNewContact = () => {
-        const newContact = {
-          name,
-          planta_id,
-          cliente_id,
-          mail,
-          cel,
-          tel,
-          rol
-        }
+    const postNewContact = async () => {
+        try{
+            const newContact = {
+                name,
+                planta_id,
+                cliente_id,
+                mail,
+                cel,
+                tel,
+                rol
+            }
       
-        fetch('http://localhost:3333/contacts/newContact',{
+        await fetch('http://localhost:3333/contacts/newContact',{
             method: "POST",
             headers:{
                 "Content-Type": "application/json",
@@ -68,39 +82,15 @@ const NewContact = () => {
               if (res.success === false) {
                   alert (res.message);
               } else {
-                  alert (res.message);                 
+                  alert (res.message);               
               }
             })
+        } catch (err) {
+            alert(err);
         }
-    
-    const OptionRender = (props) => {
-            return (
-                <option value={props.id}>
-                    {props.nombre_fantasia}
-                </option>
-            )
     }
     
-    const RenderPLacesOrClients = (props) => {
-        const array = props.array
-        console.log(array)
-           return( 
-                <select onChange={(e) => {
-                    if (workPlace === 'planta'){setPlanta_id(e.target.value)}
-                    if (workPlace === 'cliente'){setCliente_id(e.target.value)}
-                }}>
-                    <option disabled selected>{`Seleccionar ${props.selections}:`}</option>
-                    { array.map((option) => {
-                        return ( <OptionRender 
-                            nombre_fantasia={option.nombre_fantasia}
-                            nombre_fantasia_planta={option.nombre_fantasia_planta}
-                            id={option.id}
-                            />
-                        )
-                    })}
-                </select>)
-    }
-
+   
     return (
         <main>
             <br />
@@ -108,25 +98,28 @@ const NewContact = () => {
             <h1>Nuevo Contacto</h1>
             <br />
             <br />
-            <form method = 'POST' id='form-NewClient' action="javascript:void(0);">
+            <form method = 'POST' id='form-NewClient' onSubmit={handleSubmit}>
                 <span>Nombre y Apellido*:</span>
                 <input type="text" placeholder="Nombre y Apellido" onChange={(e) => setName(e.target.value) }/>
                 <span>Lugar de Trabajo*:</span>
                 <br />
                 <select onChange={(e) => setWorkPlace(e.target.value) }>
-                    <option selected disabled >Lugar de Trabajo</option>
+                    <option value="" >Lugar de Trabajo</option>
                     <option value="">No Especificado</option>
-                    <option value="planta">Planta</option>
-                    <option value="cliente">Cliente</option>
+                    <option value="Planta">Planta</option>
+                    <option value="Cliente">Cliente</option>
                 </select>
                 <br />
-                {(workPlace === 'planta') &&
-                    <RenderPLacesOrClients array={allPlaces} selections={workPlace} />}
-                {(workPlace === 'cliente') &&
-                    <RenderPLacesOrClients array={allClients} selections={workPlace}/>}
+                    { workPlace &&
+                    <RenderPLacesOrClients 
+                        array={(workPlace === "Cliente") ? allClients : allPlaces} 
+                        setCliente_id={setCliente_id}
+                        setPlanta_id={setPlanta_id}
+                        workPlace={workPlace}
+                    />}
                 <br />  
                 <span>Mail*:</span>
-                <input type="text" placeholder="Mail" onChange={(e) => setMail(e.target.value) }/>
+                <input type="mail" placeholder="Mail" onChange={(e) => setMail(e.target.value) }/>
                 <span>Tel:</span>
                 <input type="text" placeholder="Tel" onChange={(e) => setTel(e.target.value) }/>
                 <span>Cel*:</span>
@@ -142,8 +135,39 @@ const NewContact = () => {
             </form>
         </main>
     )
-
-
 }
+
+const OptionRender = (props) => {
+        return (
+            <option value={`${props.id}`}> {props.nombre_fantasia} </option>
+        )
+}
+
+const RenderPLacesOrClients = (props) => {
+    const array = props.array
+ 
+    return( 
+        <select onChange={(e) => { 
+            if (props.workPlace === 'Cliente') {
+                props.setPlanta_id()
+                props.setCliente_id(`${e.target.value}`)
+            } else if (props.workPlace === 'Planta'){ 
+                props.setCliente_id()
+                props.setPlanta_id(`${e.target.value}`)
+            } }}>
+            <option  value=''>{`Seleccionar ${props.workPlace}:`}</option>
+            { array.map((option, key) => {
+                return ( <OptionRender 
+                    nombre_fantasia={option.nombre_fantasia}
+                    id={option.id}
+                    key={key}
+                    />
+                )
+            })
+            }
+        </select>)
+}
+
+
 
 export default NewContact;
