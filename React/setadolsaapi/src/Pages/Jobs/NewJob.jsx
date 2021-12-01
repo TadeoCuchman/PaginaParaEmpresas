@@ -22,7 +22,6 @@ const NewJob = () => {
     useEffect(() => {
       chargeClients()
       chargePlaces()
-      chargeSilos()
     }, [])
 
 
@@ -60,18 +59,18 @@ const NewJob = () => {
       }
     }
 
-    const chargeSilos = async () => {
+    const chargeSilos = async (a) => {
       try{
-        await fetch('http://localhost:3333/places/allSilos', {
+        await fetch(`http://localhost:3333/places/allSilos/${a}`, {
           method: "GET",
           headers: {
               "Content-Type" : "application/json",
               "auth-token" : localStorage.getItem("jwt")
           },
           }).then(response => response.json())
-          .then(data => setAllSilos(data.array))
+          .then(data => console.log(data.array))
       }catch (err) {
-        alert(err);
+        alert('silos' + err);
       }
     }
 
@@ -128,7 +127,7 @@ const NewJob = () => {
           <span>Cliente*:</span>
           <RenderOptions array={allClients} selections={'Cliente'} setSelected={setSelectedClient} setCantidadDeSilos={setCantidadDeSilos}/>
           <span>Lugar*:</span>
-          <RenderOptions array={allPlaces} selections={'Planta'} setSelected={setSelectedPlace} setCantidadDeSilos={setCantidadDeSilos}/>
+          <RenderOptions array={allPlaces} selections={'Planta'} setSelected={setSelectedPlace} setCantidadDeSilos={setCantidadDeSilos} chargeSilos={chargeSilos}/>
           <br />
           <span>Fecha de Inicio*:</span>
           <input value={start_date} type="date" onChange={(e) => setStartDate(e.target.value) }/>
@@ -181,6 +180,7 @@ const RenderOptions = (props) => {
     <select onChange={(e) => {
       props.setSelected(e.target.value)
       props.setCantidadDeSilos(SetPlacesSilos(array, e.target.value))
+      props.chargeSilos(e.target.value)
     }}>
       <option value=''>{`Seleccionar ${props.selections}:`}</option>
       { array.map((option, key) => {
