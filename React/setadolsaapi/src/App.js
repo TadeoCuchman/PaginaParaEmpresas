@@ -7,8 +7,8 @@ import './App.css';
 import './Components/Nav.css'
 import './Components/Aside.css'
 import './Components/Footer.css'
-import './Components/Main.css'
 import './Components/Aplications.css'
+import './Pages/Main.css'
 import './Pages/Jobs/Job.css'
 import './Pages/Clients/NewClient/NewClient.css'
 import './Pages/Places/NewPLace/NewPLace.css'
@@ -22,7 +22,7 @@ import './Pages/Workers/Workers.css'
 import Nav from './Components/Nav'
 import Aside from './Components/Aside'
 import Footer from './Components/Footer'
-import Main from './Components/Main'
+import Main from './Pages/Main'
 import Applications from './Components/Applications';
 import NewClient from './Pages/Clients/NewClient/NewClient';
 import NewPlace from './Pages/Places/NewPLace/NewPLace'
@@ -43,6 +43,7 @@ import Users from './Pages/Users/Users'
 import NewContact from './Pages/Clients/Contacts/NewContact'
 import Contacts from './Pages/Clients/Contacts/Contacts'
 import Spences from './Pages/Jobs/Spences'
+import cuchmanSaiPhoto from './photos/cuchmanSaiPhoto.png';
 
 if (typeof window.ethereum.autoRefreshOnNetworkChange !== "undefined") {
   window.ethereum.autoRefreshOnNetworkChange = false;
@@ -57,8 +58,8 @@ function App() {
   return (
     <div className="App">
       <Router>
-        {token &&
-        <Nav openAside={openAside} setAside={setAside} openApplications={openApplications} setApplications={setApplications} setToken={setToken} />}
+        
+        <Nav openAside={openAside} setAside={setAside} openApplications={openApplications} setApplications={setApplications} setToken={setToken} token={token} />
         { openAside && <Aside/> }
         { openApplications && <Applications setApplications={setApplications}/>}
         <Switch>
@@ -141,9 +142,6 @@ function App() {
             <Stock />
           </Route>
 
-
-          {//gestios para fumigaciones
-          }
 
 
 
