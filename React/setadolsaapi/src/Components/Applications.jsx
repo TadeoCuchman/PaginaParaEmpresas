@@ -14,7 +14,7 @@ const Applications = (props) => {
   }
   
   return (
-      <div id="applications-popup">
+      <div id="applications-popup" onClick={() => {props.setApplications(false)}}>
           <CSSTransition nodeRef={nodeRef} in={true} appear={true} timeout={300} classNames="menu-applications">
             <div ref={nodeRef} id="applications">
               <Application to={'/NewUser'} done='done' name={'Registrar Nuevo Usuario'} setApplications={props.setApplications} />

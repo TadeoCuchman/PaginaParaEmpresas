@@ -17,24 +17,23 @@ import cuchmanSaiPhoto from '../photos/cuchmanSaiPhoto.png';
 
 
 const Nav = (props) => {
-    const [openDropdown, setDropdown] = useState(false);
+    const [openDropdown, setDropdown] = useState(false)
     const [openNotification, setNotification] = useState(false)
 
 
     return (
         <nav className="navbar">
-            <div className="aside-icon" onClick={() => {
+            {props.token && <div className="aside-icon" onClick={() => {
                 props.setAside(!props.openAside)
                 setTimeout(() => { props.setAside(false)}, 30000) 
-                
             }
-                }><ThreeDotsIcon/></div>
+                }><ThreeDotsIcon/></div>}
             <Link to='/'><img src={cuchmanSaiPhoto} alt="logo" id='logo'/></Link>
-            <ul className="nav-navbar">
+           {props.token && <ul className="nav-navbar">
                 <NavItem icon={<BellIcon/>} open={openNotification} setOpen={setNotification} setClose={setDropdown}><NotificationsMenu/></NavItem>
                 <NavItem icon={<MenuIcon/>} open={props.openApplications} setOpen={props.setApplications} ></NavItem>
                 <NavItem icon={<AccountIcon/>} open={openDropdown} setOpen={setDropdown} setClose={setNotification}><DropdownMenu setToken={props.setToken} setDropdown={setDropdown} setApplications={props.setApplications}/></NavItem>
-            </ul>
+            </ul>}
         </nav>
     );
 

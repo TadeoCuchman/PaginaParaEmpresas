@@ -25,7 +25,8 @@ const Login = (props) => {
             } else {
                 alert (res.message);
                 localStorage.setItem('jwt', res.token);
-                localStorage.setItem('alias', JSON.stringify(res.user.name))
+                localStorage.setItem('alias', res.user.name)
+                localStorage.setItem('rol', res.user.rol)
                 props.setToken(localStorage.jwt)
                 props.setOpenLogin(false)
             }   
