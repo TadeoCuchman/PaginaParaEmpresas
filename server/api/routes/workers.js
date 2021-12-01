@@ -29,29 +29,27 @@ router.get('/allWorkers', verifyToken, async (req, res) => {
 router.post('/newWorker', verifyToken, async (req, res) => {
     try {
         if(req.body.name, req.body.ci, req.body.bornDate, req.body.adress, req.body.cel, req.body.mail, req.body.altaBps, req.body.carnetS){
-            const worker = await pool.query('SELECT * FROM operarios WHERE nombre_apellido = $1 AND ci = $2',[req.body.name, req.body.ci])
-            
-            if (worker.rowCount > 0) {
-                return res.json({success: false, message: 'Operario Ya Ingresado en Base de Datos.' + worker.rows}).status(400)
+          const worker = await pool.query('SELECT * FROM operarios WHERE nombre_apellido = $1 AND ci = $2',[req.body.name, req.body.ci])
+          
+          if (worker.rowCount > 0) {
+              return res.json({success: false, message: 'Operario Ya Ingresado en Base de Datos.' + worker.rows}).status(400)
+          }
+      
+          if ( /^\S+@\S+\.\S+$/.test(req.body.mail) === false) {
+              return res.status(400).json({ success: false, message: 'Mail Incorrecto.' })
+          } 
+
+          await pool.query('INSERT INTO operarios (nombre_apellido,ci,fecha_de_nacimiento,direccion,telefono_emergencia,celular,email,alta_bps,baja_bps, carnet_de_salud,telefono) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [req.body.name, req.body.ci, req.body.bornDate, req.body.adress, req.body.cel, req.body.tel, req.body.mail, req.body.altaBps, req.body.bajaBps, req.body.carnetS, req.body.emergencyTel])
+
+          const newWorker = await pool.query('SELECT * FROM operarios WHERE nombre_apellido = $1 AND ci = $2',[req.body.name, req.body.ci])
+          const array = newWorker.rows
+
+          if (array.length > 0){
+              return res.json({ succes: true, message: 'Operario Ingresado Exitosamente.', array}).status(200)
+          } else {
+              return res.json({ success: false, message: 'Error al registrar Operario. Se perdió conexión con Base de Datos.', array}).status(400)
             }
-        
-            if ( /^\S+@\S+\.\S+$/.test(req.body.mail) === false) {
-                return res.status(400).json({ success: false, message: 'Mail Incorrecto.' })
-            } 
-
-            if(req.body.bornDate)
-
-            await pool.query('INSERT INTO operarios (nombre_apellido,ci,fecha_de_nacimiento,direccion,telefono_emergencia,celular,email,alta_bps,baja_bps, carnet_de_salud,telefono) VALUES($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11)', [req.body.name, req.body.ci, req.body.bornDate, req.body.adress, req.body.cel, req.body.tel, req.body.mail, req.body.altaBps, req.body.bajaBps, req.body.carnetS, req.body.emergencyTel])
-
-            const newWorker = await pool.query('SELECT * FROM operarios WHERE nombre_apellido = $1 AND ci = $2',[req.body.name, req.body.ci])
-            const array = newWorker.rows
-
-            if (array.length > 0){
-                return res.json({ succes: true, message: 'Operario Ingresado Exitosamente.', array}).status(200)
-            }else {
-                return res.json({ success: false, message: 'Error al registrar Operario. Se perdió conexión con Base de Datos.', array}).status(400)
-              }
-        }else {
+        } else {
             return res.json({success: false, message: 'Faltan Datos.'}).status(400)
         }
 

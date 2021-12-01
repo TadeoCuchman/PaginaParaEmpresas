@@ -9,7 +9,7 @@ import './Components/Aside.css'
 import './Components/Footer.css'
 import './Components/Main.css'
 import './Components/Aplications.css'
-import './Pages/Jobs/Fumi/Fumi.css'
+import './Pages/Jobs/Job.css'
 import './Pages/Clients/NewClient/NewClient.css'
 import './Pages/Places/NewPLace/NewPLace.css'
 import './Pages/Clients/Clients.css'
@@ -17,6 +17,7 @@ import './Pages/Workers/NewWorker/NewWorker.css'
 import './Pages/Users/Users.css'
 import './Pages/Clients/Contacts/Contacts.css'
 import './Pages/Places/Places.css'
+import './Pages/Workers/Workers.css'
 
 import Nav from './Components/Nav'
 import Aside from './Components/Aside'
@@ -26,8 +27,8 @@ import Applications from './Components/Applications';
 import NewClient from './Pages/Clients/NewClient/NewClient';
 import NewPlace from './Pages/Places/NewPLace/NewPLace'
 import NewJob from './Pages/Jobs/NewJob'
-import ChooseFumi from './Pages/Jobs/Fumi/ChooseFumi'
-import Fumi from './Pages/Jobs/Fumi/Fumi'
+import ChooseJob from './Pages/Jobs//ChooseJob'
+import Job from './Pages/Jobs/Job'
 import CloseJob from './Pages/Jobs/CloseJob'
 import Clients from './Pages/Clients/Clients'
 import Places from './Pages/Places/Places'
@@ -43,10 +44,15 @@ import NewContact from './Pages/Clients/Contacts/NewContact'
 import Contacts from './Pages/Clients/Contacts/Contacts'
 import Spences from './Pages/Jobs/Spences'
 
+if (typeof window.ethereum.autoRefreshOnNetworkChange !== "undefined") {
+  window.ethereum.autoRefreshOnNetworkChange = false;
+}
+
 function App() {
   const [openAside, setAside] = useState(false);
   const [openApplications, setApplications] = useState(false)
   const [token, setToken] = useState(localStorage.jwt)
+  const [job, setJob] = useState(Object)
 
   return (
     <div className="App">
@@ -105,6 +111,13 @@ function App() {
          
           {//agregar a base de datos informacion para pedidos en tiempo real
           }
+
+          <Route path='/ChooseJob'>
+            <ChooseJob setJob={setJob} job={job}/>
+          </Route>
+          <Route exact path='/Job/:id'>
+            <Job job={job}/>
+          </Route>
           <Route path='/NewJob'>
             <NewJob />
           </Route>
@@ -132,12 +145,6 @@ function App() {
           {//gestios para fumigaciones
           }
 
-          <Route path='/ChooseFumi'>
-            <ChooseFumi/>
-          </Route>
-          <Route exact path='/Fumi/:id'>
-            <Fumi/>
-          </Route>
 
 
         </Switch>

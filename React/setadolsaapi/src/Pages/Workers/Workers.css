@@ -1,0 +1,12 @@
+.worker {
+  list-style: none;
+  margin-bottom: 20px;
+  border: var(--border);
+  border-radius: var(--border-radius);
+  padding: 10px;
+}
+
+#workers {
+  display: grid;
+  justify-content: center;
+}

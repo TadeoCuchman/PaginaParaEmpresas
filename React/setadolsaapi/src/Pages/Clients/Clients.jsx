@@ -34,9 +34,9 @@ const Clients = () => {
   const Client = (props) => {
     return (
       <li className="client" onClick={() => props.setSelected(props.id)}>
-        <span>Razón Social: {props.razon_social}</span>
+        <h2>Nombre Fantasia: {props.nombre_fantasia}</h2>
         <br />
-        <span>Nombre Fantasia: {props.nombre_fantasia}</span>
+        <span>Razón Social: {props.razon_social}</span>
         <br />
         <span>Rut: {props.rut}</span>
         <br />
@@ -87,13 +87,13 @@ const EditPopUp = () => {
         <button onClick={() => setEditUserPopUp(false)}>X</button>
         <br />
         <form action="PUT" onSubmit={handleSubmit}>
-            <span>Razón Social:</span>
-            <br />
-            <input type="text" value={razon_social} onChange={(e) => setRazon_Social(e.target.value)}/>
-            <br />
             <span>Nombre Fantasia:</span>
             <br />
             <input type="text" value={nombre_fantasia} onChange={(e) => setNombre_Fantasia(e.target.value)}/>
+            <br />
+            <span>Razón Social:</span>
+            <br />
+            <input type="text" value={razon_social} onChange={(e) => setRazon_Social(e.target.value)}/>
             <br />
             <span>Rut:</span>
             <br />

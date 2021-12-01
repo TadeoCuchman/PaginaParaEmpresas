@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState } from 'react'
-import { Link } from "react-router-dom";
 import Login from '../Components/Login'
 
 const Main = (props) => {
@@ -9,7 +8,7 @@ const Main = (props) => {
     <main>
         <br />
         <br />
-        <h1>Cuchman Servicios AgroIndustriales</h1>
+        <h1 id='titulo'>Cuchman Servicios AgroIndustriales</h1>
         <br />
         {(openLogin === false) && (!props.token) &&
         <button id="login" onClick={() => setOpenLogin(true)}>Login</button>}

@@ -1,43 +1,49 @@
 import React from 'react';
 import { useState } from 'react'
 
-import { useParams } from 'react-router-dom'
 
 
-const Spent = (props) => {
-    return (
-        <div className="newSpend">
-
-        </div>
-    )
-}
 
 const ListOfExpences = (props) => {
-    const spents = props.spents
+    const spends = props.spends
     const [selected, setSelected] = useState(-1)
-    if (spents){
+
+
+
+
+    if (spends){
     return (
-        <div id='feed'> 
-            { spents.map((spent) => {
-                    return ( <Spent
-                        tipo={spent.tipo}
-                        insumo={spent.insumo}
-                        costo={spent.costo}
-                        cantidad={spent.cantidad}
-                        no_factura={spent.no_factura}
-                        rut={spent.rut}
-                        proveedor={spent.proveedor}
-                        no_de_receta={spent.no_de_receta}
-                        descripción={spent.descripción}
-                        noches={spent.noches}
-                        fecha_entrada={spent.fecha_entrada}
-                        selected={spent.id === selected}
+        <ul id='feed'> 
+            { spends.map((spend) => {
+                    return ( <Spend
+                        tipo={spend.tipo}
+                        insumo={spend.insumo}
+                        trabajo={spend.id_trabajo}
+                        costo={spend.costo}
+                        moneda={spend.moneda}
+                        cantidad={spend.cantidad}
+                        no_factura={spend.no_factura}
+                        rut={spend.rut}
+                        proveedor={spend.proveedor}
+                        no_de_receta={spend.no_de_receta}
+                        descripción={spend.descripción}
+                        noches={spend.noches}
+                        fecha_entrada={spend.fecha_entrada}
+                        selected={spend.id === selected}
                         setSelected={setSelected}
                         />
                     )
                 }) }
-        </div>
+        </ul>
     )} else { return [] }
+}
+
+const Spend = (props) => {
+    return (
+        <li className="newSpend">
+            <span>{props.id_trabajo + '-' + props.tipo + '-' + props.costo + '-' + props.moneda}</span>
+        </li>
+    )
 }
 
 export default ListOfExpences;

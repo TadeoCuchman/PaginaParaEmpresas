@@ -31,21 +31,35 @@ const Workers = () => {
 
     const Worker = (props) => {
         return (
-            <li className="worker" onClick={() => props.setSelected(props.id)}>
+            <li className="worker" onClick={() => setSelected(props.id)}>
                 <img src="" alt="" />
-                <h1>Nombre y Apellido: {props.name} </h1>
+                <h2>Nombre y Apellido: {props.name} </h2>
+                <br />
+                <span>Dirección: {props.adress}</span>
+                <br />
+                <span>Celular: {props.cel}</span>
+                <br />
+                <span>Teléfono: {props.tel}</span>
+                <br />
+                <span>Mail: {props.mail}</span>
+                <br />
+                <span>Teléfono de Emergencia: {props.emergencyTel}</span>
+                <br />
+                {props.selected &&
+                <>
+                <span>Alta BPS: {props.altaBps}</span>
                 <br />
                 <span>CI: {props.ci}</span>
+                <br />
                 <span>Fecha de Nacimiento: {props.bornDate}</span>
-                <span>Dirección: {props.adress}</span>
-                <span>Celular: {props.cel}</span>
-                <span>Teléfono: {props.tel}</span>
-                <span>Mail: {props.mail}</span>
-                <span>Alta BPS: {props.altaBps}</span>
+                <br />
                 <span>Baja BPS: {props.bajaBps}</span>
+                <br />
                 <span>Carnet de Salud (vencimiento): {props.carnetS}</span>
-                <span>Teléfono de Emergencia: {props.emergencyTel}</span>
-                <button></button>
+                <br />
+                <button>Edit</button>
+                </>
+                }
             </li>
         )
     }
@@ -63,7 +77,7 @@ const Workers = () => {
         const [carnetS, setCarnetS] = useState('')
         const [emergencyTel, setEmergencyTel] = useState('')
 
-        const modifyUser = async (a) => {
+        const modifyWorker = async (a) => {
             const modifyBody = {
                 name,
                 ci,
@@ -145,7 +159,7 @@ const Workers = () => {
                 <br />
                 <br />
                 <br />
-                    <input type="submit" id="submit" onClick = { () =>  modifyUser(selected)} /> 
+                    <input type="submit" id="submit" onClick = { () =>  modifyWorker(selected)} /> 
                 </form>
             </div>
         )
@@ -157,20 +171,24 @@ const Workers = () => {
         if (workers){
             return(
                 <div id='workers'>
-                    { workers.map((worker => {
+                    { workers.map(((worker, key) => {
                         return (
                             <Worker
+                                key={key}
+                                id={worker.id}
                                 name={worker.nombre_apellido}
                                 ci={worker.ci}
                                 bornDate={worker.fecha_de_nacimiento}
-                                adress
-                                cel
-                                tel
-                                mail
-                                altaBps
-                                bajaBps
-                                carnetS
-                                emergencyTel
+                                adress={worker.direccion}
+                                cel={worker.celular}
+                                tel={worker.telefono}
+                                mail={worker.mail}
+                                altaBps={worker.alta_bps}
+                                bajaBps={worker.baja_bps}
+                                carnetS={worker.carnet_de_salud}
+                                emergencyTel={worker.telefono_emergencia}
+                                selected={worker.id === selected}
+
                             />)
                     }))}
 
@@ -181,7 +199,11 @@ const Workers = () => {
 
     return (
         <main>
-            <canvas></canvas>
+            <br />
+            <h1>Lista de Operarios:</h1>
+            <br />
+            <ListOfWorkers workers={allWorkers}/>
+
         </main>
     )
 }

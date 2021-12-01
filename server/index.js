@@ -8,13 +8,15 @@ const users = require("./api/routes/users")
 const contacts = require("./api/routes/contacts")
 const clients = require("./api/routes/clients")
 const places = require("./api/routes/places")
-
+const workers = require("./api/routes/workers")
+const jobs = require("./api/routes/jobs")
 
 const app = express()
 app.use(bodyParser.json())
 app.use(cors())
 
-// app.use('/jobs', jobs)
+app.use('/jobs', jobs)
+app.use('/workers', workers)
 app.use('/clients', clients)
 app.use('/places', places)
 app.use('/contacts', contacts)

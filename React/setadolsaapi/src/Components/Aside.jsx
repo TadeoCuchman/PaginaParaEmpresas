@@ -9,7 +9,8 @@ const Aside = () => {
             <div className="navSpace"></div>
             
             <div className="profilAside">
-                <span id='profilname'>Usuario</span>
+                <span id='profilname'>{localStorage.alias}</span>
+                
             </div>
             
             <div className='midAside'>

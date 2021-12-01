@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useState } from "react"
 import { useHistory } from "react-router-dom"
@@ -8,6 +9,9 @@ pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/$
 
 
 const NewWorker = () => {
+    
+    const history = useHistory()
+    
     const [name, setName] = useState('')
     const [ci, setCi] = useState('')
     const [bornDate, setBornDate] = useState('')
@@ -16,11 +20,10 @@ const NewWorker = () => {
     const [tel, setTel] = useState('')
     const [mail, setMail] = useState('')
     const [altaBps, setAltaBps] = useState('')
-    const [bajaBps, setBajaBps] = useState(null)
+    const [bajaBps, setBajaBps] = useState('')
     const [carnetS, setCarnetS] = useState('')
     const [emergencyTel, setEmergencyTel] = useState('')
 
-    const history = useHistory()
 
     const [pdf, setPdf] = useState()
     const [photo, setPhoto] = useState()
@@ -31,47 +34,51 @@ const NewWorker = () => {
       };
 
 
-    const postNewWorker = () => {
-    const newWorker = {
-        name,
-        ci,
-        bornDate,
-        adress,
-        cel,
-        tel,
-        mail,
-        altaBps,
-        bajaBps,
-        carnetS,
-        emergencyTel
-    }
-    
-    fetch('http://localhost:3333/workers/newWorker',{
-        method: "POST",
-        headers:{
-            "Content-Type": "application/json",
-            "auth-token" : localStorage.getItem("jwt")
-        },
-        body: JSON.stringify(newWorker)
-        }).then(function(respuesta) {
-            return respuesta.json()
-        }).then(function (res) {
-            if (res.success === false) {
-                alert (res.message);
-            } else {
-                alert (res.message); 
-                setName('');
-                setCi('');
-                setBornDate('');
-                setAdress('');
-                setCel('');
-                setMail('');
-                setAltaBps('');
-                setBajaBps('');
-                setCarnetS('');
-                setEmergencyTel('');        
+    const postNewWorker = async () => {
+        try { 
+            const newWorker = {
+                name,
+                ci,
+                bornDate,
+                adress,
+                cel,
+                tel,
+                mail,
+                altaBps,
+                bajaBps,
+                carnetS,
+                emergencyTel
             }
-        })
+        
+            await fetch('http://localhost:3333/workers/newWorker',{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json",
+                    "auth-token" : localStorage.getItem("jwt")
+                },
+                body: JSON.stringify(newWorker)
+                }).then(function(respuesta) {
+                    return respuesta.json()
+                }).then(function (res) {
+                    if (res.success === false) {
+                        alert (res.message);
+                    } else {
+                        alert (res.message); 
+                        setName('');
+                        setCi('');
+                        setBornDate('');
+                        setAdress('');
+                        setCel('');
+                        setMail('');
+                        setAltaBps('');
+                        setBajaBps('');
+                        setCarnetS('');
+                        setEmergencyTel('');        
+                    }
+                })
+        } catch (err) {
+            alert ('No conexión con Servidor.')
+        }
     }
 
     const OpenPdf = () =>{
@@ -105,33 +112,41 @@ const NewWorker = () => {
     }
 
     const handlePhoto = () => {
-        const data = new FormData();
-        data.append("file", photo);
-       
-        fetch("http://localhost:3333/workers/uploadPhoto", {
-          method: "POST",
-          body: data,
-        })  
-        .then(response => response.json())
-        .then((res) => {       
-            alert(res.message);
-        });
+        try {
+            const data = new FormData();
+            data.append("file", photo);
+        
+            fetch("http://localhost:3333/workers/uploadPhoto", {
+            method: "POST",
+            body: data,
+            })  
+            .then(response => response.json())
+            .then((res) => {       
+                alert(res.message);
+            });
+        } catch (err) {
+            alert(err.message);
+        }
     }
     
     const handlePdf = () => {
-        const data = new FormData();
-        for(let i = 0; i < pdf.length; i++){
-            data.append("file", pdf[i]);
+        try { 
+            const data = new FormData();
+            for(let i = 0; i < pdf.length; i++){
+                data.append("file", pdf[i]);
+            }
+        
+            fetch("http://localhost:3333/workers/uploadPdfs", {
+            method: "POST",
+            body: data,
+            })  
+            .then(response => response.json())
+            .then((res) => {       
+                alert(res.message);
+            });
+        } catch (err) {
+            alert(err.message)
         }
-       
-        fetch("http://localhost:3333/workers/uploadPdfs", {
-          method: "POST",
-          body: data,
-        })  
-        .then(response => response.json())
-        .then((res) => {       
-            alert(res.message);
-        });
     }
 
     return (
@@ -184,8 +199,8 @@ const NewWorker = () => {
                 <br />
                 <br />
                 <input type="submit" value="Ingresar" onClick={() => {
-                    handlePhoto()
-                    handlePdf()
+                    photo && handlePhoto()
+                    pdf && handlePdf()
                     postNewWorker()
                 }}/>
             </form>

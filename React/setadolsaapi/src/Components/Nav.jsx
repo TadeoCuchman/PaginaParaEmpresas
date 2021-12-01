@@ -12,6 +12,7 @@ import { ReactComponent as ConfigIcon } from '../Icons/Configuration.svg';
 import { ReactComponent as RightArrowIcon } from '../Icons/RightArrow.svg';
 import { ReactComponent as ExitIcon } from '../Icons/Exit.svg';
 import { ReactComponent as ThreeDotsIcon } from '../Icons/Dots.svg';
+import unknown from '../photos/unknown.jpg'
 
 
 const Nav = (props) => {
@@ -70,13 +71,14 @@ const DropdownMenu = (props) => {
     const DropdownItem = (props) => {
 
         return (
-            <a href='#' className="menu-item" onClick={() => {
+            <div className="menu-item" onClick={() => {
                     props.goToMenu && setActiveMenu(props.goToMenu)
                 }}>
-                <span className="icon-button">{ props.leftIcon }</span>
+                {props.img ? <img className="icon-button" src={unknown} /> : <span className="icon-button">{ props.leftIcon }</span>}
                 { props.children }
                 <span className="icon-right">{ props.rightIcon }</span>
-            </a>
+
+            </div>
         )
     }
 
@@ -84,7 +86,7 @@ const DropdownMenu = (props) => {
         let history = useHistory();
 
         return (
-            <a href='#' className="menu-item" onClick={() => {
+            <div className="menu-item" onClick={() => {
                     localStorage.removeItem('alias')
                     localStorage.removeItem('jwt')
                     props.setToken(localStorage.jwt)
@@ -94,7 +96,7 @@ const DropdownMenu = (props) => {
                     props.closeApps(false)
                 }}>
                 <span className="icon-button">{ props.leftIcon }</span>
-            </a>
+            </div>
         )
     }
     
@@ -107,7 +109,7 @@ const DropdownMenu = (props) => {
                 classNames="menu-primary"
                 onEnter={calcHeight}>
                 <div className="menu">
-                    <DropdownItem><Link to="/MyProfile">My Profile</Link></DropdownItem>
+                    <DropdownItem img={true} ><Link to="/MyProfile">My Profile</Link></DropdownItem>
                     <DropdownItem 
                         leftIcon={<ConfigIcon/>}
                         rightIcon={<RightArrowIcon/>}

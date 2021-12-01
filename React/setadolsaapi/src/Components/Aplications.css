@@ -19,24 +19,22 @@
   border: var(--border);
   border-radius: var(--border-radius);
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr;
-  align-content: stretch;
-  justify-content: center;
+  grid-template-columns: auto auto auto;
   align-items: center;
   justify-items: center;
-  text-align: center;
   z-index: 100;
   overflow: hidden;
+  padding: 30px;
 }
 
 #applications div {
   border: var(--border);
   border-radius: var(--border-radius);
-  width: var(--applications-width);
-  height: 10fr;
+  width: 130px;
+  height: 150px;
   background-color: #929292;
-  text-align: center;
+  padding: 10px;
+  font-size: 30px;
 }
 
 #applications div:hover {

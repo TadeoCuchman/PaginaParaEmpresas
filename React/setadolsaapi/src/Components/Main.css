@@ -23,3 +23,7 @@ main {
   justify-content: center;
   background-color: #9c9da3;
 }
+
+#titulo {
+  font-size: 60px;
+}

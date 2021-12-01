@@ -1,6 +1,5 @@
 import React from 'react';
 import { useState, useEffect} from 'react'
-import { Link } from "react-router-dom";
 
 const Contacts = () => {
 
@@ -34,7 +33,7 @@ const Contacts = () => {
     const Contact = (props) => {
         return (
             <li className="contact" onClick={() => props.setSelected(props.id)}>
-                <h4>Nombre: {props.name}</h4>
+                <h4>Nombre: {props.nombre}</h4>
                 <br />
                 <span>Mail: {props.mail}</span>
                 <br />
@@ -185,9 +184,7 @@ const Contacts = () => {
                 </form>
             </div>
         )
-    }
-
-    
+    } 
 
     const ListOfContacts = (props) => {
         const contacts =  props.contacts
@@ -195,9 +192,10 @@ const Contacts = () => {
         if (contacts){
             return(
                 <div id='contacts'>
-                    { contacts.map((contact => {
+                    { contacts.map(((contact, key) => {
                         return ( <Contact
-                            name={contact.name}
+                            key={key}
+                            nombre={contact.nombre}
                             mail={contact.mail}
                             rolPlace={contact.nombre_fantasia}
                             rol={contact.rol}
@@ -206,7 +204,6 @@ const Contacts = () => {
                             selected={contact.id === selected}
                             setSelected={setSelected}
                             id={contact.id}
-                            key={contact.id}
                             />)
                     }))}
                 </div>

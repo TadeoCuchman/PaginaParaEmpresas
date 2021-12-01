@@ -1,6 +1,12 @@
+#contacts {
+  display: grid;
+  justify-content: center;
+}
+
 .contact {
   margin-top: 20px;
   border-radius: var(--border-radius);
   border: var(--border);
   padding: 10px;
+  list-style: none;
 }
