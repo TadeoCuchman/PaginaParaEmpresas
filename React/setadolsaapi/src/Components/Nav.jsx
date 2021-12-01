@@ -13,6 +13,7 @@ import { ReactComponent as RightArrowIcon } from '../Icons/RightArrow.svg';
 import { ReactComponent as ExitIcon } from '../Icons/Exit.svg';
 import { ReactComponent as ThreeDotsIcon } from '../Icons/Dots.svg';
 import unknown from '../photos/unknown.jpg'
+import cuchmanSaiPhoto from '../photos/cuchmanSaiPhoto.png';
 
 
 const Nav = (props) => {
@@ -28,6 +29,7 @@ const Nav = (props) => {
                 
             }
                 }><ThreeDotsIcon/></div>
+            <Link to='/'><img src={cuchmanSaiPhoto} alt="logo" id='logo'/></Link>
             <ul className="nav-navbar">
                 <NavItem icon={<BellIcon/>} open={openNotification} setOpen={setNotification} setClose={setDropdown}><NotificationsMenu/></NavItem>
                 <NavItem icon={<MenuIcon/>} open={props.openApplications} setOpen={props.setApplications} ></NavItem>

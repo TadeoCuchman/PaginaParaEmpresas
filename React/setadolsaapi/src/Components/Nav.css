@@ -6,6 +6,16 @@ nav {
   z-index: 1000;
 }
 
+#logo {
+  position: absolute;
+  width: 180px;
+  height: calc(var(--nav-size) - 20px);
+  margin-top: 10px;
+  left: calc(50% - 90px);
+  border: var(--border);
+  border-radius: var(--border-radius);
+}
+
 .aside-icon {
   position: absolute;
   --button-size: calc(var(--nav-size) * 0.6);
