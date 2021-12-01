@@ -12,36 +12,40 @@ const NewUser = () => {
         event.preventDefault();
       };
     
-    const postNewUser = () => {
-        const newUser = {
+    const postNewUser = async () => {
+        try {
+            const newUser = {
             name: user,
             mail: mail,
             rol: rol,
             password: password,
             salt: ''
+            }
+        
+            await fetch('http://localhost:3333/users/register',{
+                method: "POST",
+                headers:{
+                    "Content-Type": "application/json",
+                    "auth-token" : localStorage.getItem("jwt")
+                },
+                body: JSON.stringify(newUser)
+            }).then(function(respuesta) {
+                return respuesta.json()
+            }).then(function (res) {
+                if (res.success === false) {
+                    alert (res.message);
+                } else {
+                    alert (res.message); 
+                    setUser('');
+                    setPassword(''); 
+                    setMail('');  
+                    setRol('');              
+                }
+                })
+        } catch (err) {
+            alert ('No conexión con servidor')
         }
-      
-        fetch('http://localhost:3333/users/register',{
-            method: "POST",
-            headers:{
-                "Content-Type": "application/json",
-                "auth-token" : localStorage.getItem("jwt")
-            },
-            body: JSON.stringify(newUser)
-          }).then(function(respuesta) {
-              return respuesta.json()
-          }).then(function (res) {
-              if (res.success === false) {
-                  alert (res.message);
-              } else {
-                  alert (res.message); 
-                  setUser('');
-                  setPassword(''); 
-                  setMail('');  
-                  setRol('');              
-              }
-            })
-        }
+    }
 
     return (
         <main>

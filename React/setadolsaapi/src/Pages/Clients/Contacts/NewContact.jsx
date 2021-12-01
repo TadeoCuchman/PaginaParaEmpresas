@@ -39,7 +39,7 @@ const NewContact = () => {
                 .then(data => setAllClients(data.array))
         }catch (err) {
             alert(err);
-            }
+        }
       }
       
     const chargePlaces = async () => {
@@ -53,7 +53,7 @@ const NewContact = () => {
                 }).then(response => response.json())
                 .then(data => setAllPlaces(data.array))
         }catch (err) {
-        alert(err);
+            alert(err);
         }
     }
 

@@ -1,11 +1,35 @@
 import React from 'react';
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Link } from "react-router-dom";
 
 const NewClient = () => {
   const [razon_social, setRazon_Social] = useState('')
   const [nombre_fantasia, setNombre_Fantasia] = useState('')
+  const [allClients, setAllClients] = useState([])
   const [rut, setRut] = useState('')
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+  };
+
+  useEffect(() => {
+    chargeClients()
+}, [])
+
+  const chargeClients = async () => {
+    try {
+      await fetch('http://localhost:3333/clients/allClients', {
+        method: "GET",
+        headers: {
+            "Content-Type" : "application/json",
+            "auth-token" : localStorage.getItem("jwt")
+        },
+        }).then(response => response.json())
+        .then(data => setAllClients(data.array))
+    }catch (err) {
+      alert('No conexión con Servidor')
+    }
+  }
 
   const postNewClient = () => {
     const newClient = {
@@ -27,7 +51,10 @@ const NewClient = () => {
         if (res.success === false) {
             alert (res.message);
         } else {
-            alert (res.message);                 
+            alert (res.message);      
+            setRazon_Social('');
+            setNombre_Fantasia('');
+            setRut('');           
         }
       })
     }
@@ -41,16 +68,15 @@ const NewClient = () => {
       <h1>Nuevo Cliente</h1>
       <br />
       <br />
-      <form method = 'POST' id='form-NewClient' action="javascript:void(0);">
+      <form method = 'POST' id='form-NewClient' onSubmit={handleSubmit}>
         <span>Razón Social:</span>
-        <input type="text" placeholder="Razón Social" onChange={(e) => setRazon_Social(e.target.value)}/>
+        <input type="text" placeholder="Razón Social" value={razon_social} onChange={(e) => setRazon_Social(e.target.value)}/>
         <span>Nombre Fantasia:</span>
-        <input type="text" placeholder="Nombre Fantasia" onChange={(e) => setNombre_Fantasia(e.target.value)}/>
+        <input type="text" placeholder="Nombre Fantasia" value={nombre_fantasia} onChange={(e) => setNombre_Fantasia(e.target.value)}/>
         <span>RUT:</span>
-        <input type="text" placeholder="RUT" onChange={(e) => setRut(e.target.value)}/>
+        <input type="text" placeholder="RUT" value={rut} onChange={(e) => setRut(e.target.value)}/>
         <br/>
-        <br/>
-        <input type="submit" id="submit-form" value="Agregar" onClick={() => postNewClient() }/>
+        <input type="submit" id="submit-form" value="Agregar" onClick={() => postNewClient() }/> 
         <br />
       </form>
     </main>
