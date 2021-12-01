@@ -4,6 +4,7 @@ import { useState, useEffect} from 'react'
 const Places = () => {
     const [allPlaces, setAllPlaces] = useState([])
     const [editPlacePopup, setEditPlacePopUp] = useState(false)
+    const [silosPopup, setSilosPopup] = useState(false)
     const [selected, setSelected] = useState(-1)    
  
 
@@ -31,7 +32,7 @@ const Places = () => {
         <main>
             <br />
             <h1>Lista de Plantas:</h1>
-            <ListOfPlaces places={allPlaces} setEditPlacePopUp={setEditPlacePopUp} selected={selected} setSelected={setSelected}/>
+            <ListOfPlaces places={allPlaces} setEditPlacePopUp={setEditPlacePopUp} selected={selected} setSelected={setSelected} setSilosPopup={setSilosPopup}/>
             {editPlacePopup && 
                 <EditPopUp selected={selected} allPlaces={allPlaces} chargePlaces={chargePlaces} setEditPlacePopUp={setEditPlacePopUp}/>}
         </main>
@@ -59,9 +60,8 @@ const Place = (props) => {
             <br />
             {props.selected && 
             <>
-            <button onClick={() => props.setSilosPopUp(true)}>Ver Silos</button>
-            <button>Ver Planos</button>
-            <button onClick={() => props.setEditPlacePopUp(true)}>Editar</button>
+                <button>Ver Planos</button>
+                <button onClick={() => props.setEditPlacePopUp(true)}>Editar</button>
             </>}
 
         </li>
@@ -87,7 +87,7 @@ const ListOfPlaces = (props) => {
                         selected={place.id === props.selected}
                         setSelected={props.setSelected}
                         setEditPlacePopUp={props.setEditPlacePopUp}
-                        setSilosPopUp= {props.setSilosPopUp}
+                        setSilosPopup= {props.setSilosPopup}
                         />)
                 }))}
             </ul>
@@ -126,7 +126,7 @@ const Silo = (props) => {
     return (
         <div className="siloInfo" > 
             <span>Nombre de Silo:</span>
-            <input type="text" value={props.silos[props.index].nombre_de_silo} className="nombreDeSilo" onChange={ NameChanged(props.index)}/>
+            <input type="text" value={`${props.silos[props.index].nombre_de_silo}`} className="nombreDeSilo" onChange={ NameChanged(props.index)}/>
             <span>Tipo de Silo:</span>
             <select className="tipoDeSilo" value={props.silos[props.index].tipo_de_silo} onChange={ TypeChanged(props.index)} >
                 <option value=''>Tipo de Silo</option>
@@ -141,7 +141,6 @@ const Silo = (props) => {
     )
 }
 
-
 const RenderSilos = (props) => {
     const silos = props.silos
     
@@ -152,7 +151,7 @@ const RenderSilos = (props) => {
             silos.push({ planta_id: props.placeId, nombre_de_silo:'', tipo_de_silo: '', toneladas: 0})
         }
     
-        console.log(silos)
+
     }
         return (
             silos.map((silo, i) => {
@@ -201,7 +200,6 @@ const EditPopUp = (props) => {
     const [plano, setPlano] = useState('')
     const [silos, setSilos] = useState([])
     
-    console.log(silos)
 
     useEffect(() => {
         chargeSilosFromPLace(placeId)
@@ -222,6 +220,7 @@ const EditPopUp = (props) => {
                 },
                 }).then(response => response.json())
                 .then(data => setSilos(data.array))
+                
         } catch (err) {
             alert('No conexión con Servidor.')
         }
@@ -248,10 +247,7 @@ const EditPopUp = (props) => {
                     },body: JSON.stringify(modifyBody)
                 }).then((respuesta) => {
                     return respuesta.json()
-                }).then(function (res) {
-                    if (!res.succes) {
-                        alert (res.message);
-                    }
+                }).then(function (res) { alert (res.message);
                 }).then(() => { 
                     props.chargePlaces()
                     props.setEditPlacePopUp(false)
@@ -289,7 +285,6 @@ const EditPopUp = (props) => {
                         setSilos={setSilos}
                         setPopupSilosInfo={setPopupSilosInfo}
                         placeId={placeId}
-
                     />
                 </div>
                 }
