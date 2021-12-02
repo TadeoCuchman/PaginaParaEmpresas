@@ -31,7 +31,7 @@ const Workers = () => {
 
     const Worker = (props) => {
         return (
-            <li className="worker" onClick={() => setSelected(props.id)}>
+            <li className="worker" onClick={() => setSelected(props.selected ? -1 : props.id)}>
                 <img src="" alt="" />
                 <h2>Nombre y Apellido: {props.name} </h2>
                 <br />

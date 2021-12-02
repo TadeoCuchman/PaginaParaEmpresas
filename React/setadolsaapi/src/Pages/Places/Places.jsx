@@ -45,7 +45,7 @@ const Places = () => {
 
 const Place = (props) => {
     return (
-        <li className="place" onClick={() => props.setSelected(props.id)}>
+        <li className="place" onClick={() => props.setSelected(props.selected ? -1 : props.id)}>
             <h2>Nombre Fantasia: {props.nombre_fantasia}</h2>
             <br />
             <span>Localidad: {props.localidad} </span>
