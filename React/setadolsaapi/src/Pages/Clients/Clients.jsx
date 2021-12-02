@@ -1,20 +1,40 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
+import {ListOfContacts} from './Contacts/Contacts'
 
 const Clients = () => {
   const [allClients, setAllClients] = useState([])
+  const [allContactsClients, setAllContactsClients] = useState([])
   const [editUserPopup, setEditUserPopUp] = useState(false)
   const [selected, setSelected] = useState(-1)
+
 
    
   useEffect(() => {
     chargeClients()
+    chargeAllContactsClients()
 }, [])
 
   const handleSubmit = (event) => {
     event.preventDefault();
   };
+
+  const chargeAllContactsClients = async () => {
+    try {
+      await fetch(`http://localhost:3333/contacts/contactsClients`, {
+        method: "GET",
+        headers: {
+            "Content-Type" : "application/json",
+            "auth-token" : localStorage.getItem("jwt")
+        },
+        }).then(response => response.json())
+        .then(data => setAllContactsClients(data.arraycontactsClientes))
+    }catch (err) {
+      alert('No conexión con Servidor')
+    }
+  }
+
     
   const chargeClients = async () => {
     try {
@@ -30,10 +50,17 @@ const Clients = () => {
       alert('No conexión con Servidor')
     }
   }
+
+  function setContacts (array, id) {
+    const result = array.filter(contact => contact.cliente_id === id)
+
+    return (result)
+
+  }
     
   const Client = (props) => {
     return (
-      <li className="client" onClick={() => props.setSelected(props.id)}>
+      <li className="client" onClick={() => props.setSelected(props.selected ? -1 : props.id)}>
         <h2>Nombre Fantasia: {props.nombre_fantasia}</h2>
         <br />
         <span>Razón Social: {props.razon_social}</span>
@@ -41,8 +68,13 @@ const Clients = () => {
         <span>Rut: {props.rut}</span>
         <br />
         {props.selected && 
-          <button onClick={() => setEditUserPopUp(true)}>Editar</button>}
-      </li>
+          <>
+          <button onClick={() => setEditUserPopUp(true)}>Editar</button>
+
+          <ListOfContacts contacts={setContacts(allContactsClients, props.id)} selected={selected} setSelected={setSelected}/>
+          </>
+          }
+      </li> 
     )
   }
 
