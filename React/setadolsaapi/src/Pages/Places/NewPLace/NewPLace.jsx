@@ -43,7 +43,7 @@ const NewPlace = () => {
         }
   }
 
-  const postNewPlace = async (props) => {
+  const postNewPlace = async () => {
     try{
       const newPlace = {
         cliente_id,
@@ -83,13 +83,13 @@ const NewPlace = () => {
     const silos1 = []
     if ( a <= 40 ) {
       for (let i = 1; i <= a; i++) {
-        silos1.push({ nombre:'' , tipo: '' ,toneladas: 0})
+        silos1.push({ nombre:'' , tipo: '' , capacidad: 0, medida:''})
       }
     } 
     setSilos(silos1)
   }
   
-  
+  console.log(silos)
 
  
 
@@ -218,19 +218,26 @@ const Silo = (props) => {
   const TypeChanged = index => e => {
     let newArr = [...props.silos]; 
 
-    newArr[index].tipo = e.target.value
-
+    newArr[index].tipo_de_silo = e.target.value
   
-    props.setSilos(newArr); 
+    props.setSilos(newArr);  
   }
 
-  const TonsChanged = index => e => {
+  const CapacityChanged = index => e => {
     let newArr = [...props.silos]; 
 
-    newArr[index].toneladas = parseInt(e.target.value)
+    newArr[index].capacidad = parseInt(e.target.value)
   
-    props.setSilos(newArr); 
+    props.setSilos(newArr);  
   }
+
+const MeditionChanged = index => e => {
+    let newArr = [...props.silos]; 
+
+    newArr[index].medida = e.target.value
+  
+    props.setSilos(newArr);  
+}
 
   return(
     <div className="siloInfo"> 
@@ -239,8 +246,12 @@ const Silo = (props) => {
       <span>Tipo de Silo:</span>
       <SelectTypeSilos TypeChanged={TypeChanged} index={props.index} silos={props.silos} />
       <br />
-      <span>Toneladas:</span>
-      <input type="number" className="toneladasDeSilo" value={ props.silos[props.index].toneladas } onChange={ TonsChanged(props.index)}/>
+      <span>Capacidad:</span>
+      <input type="number" className="toneladasDeSilo" value={ props.silos[props.index].toneladas } onChange={ CapacityChanged(props.index)}/>
+      <select value={props.silos[props.index].medida} onChange={ MeditionChanged(props.index)}>
+          <option value="toneladas">Toneladas</option>
+          <option value="litros">Litros</option>
+      </select>
     </div>
   ) 
 }

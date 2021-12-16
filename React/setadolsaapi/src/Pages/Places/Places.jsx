@@ -34,7 +34,7 @@ const Places = () => {
             <h1>Lista de Plantas:</h1>
             <ListOfPlaces places={allPlaces} setEditPlacePopUp={setEditPlacePopUp} selected={selected} setSelected={setSelected} setSilosPopup={setSilosPopup}/>
             {editPlacePopup && 
-                <EditPopUp selected={selected} allPlaces={allPlaces} chargePlaces={chargePlaces} setEditPlacePopUp={setEditPlacePopUp}/>}
+                <EditPopUpPlace selected={selected} allPlaces={allPlaces} chargePlaces={chargePlaces} setEditPlacePopUp={setEditPlacePopUp}/>}
         </main>
     )
 }
@@ -45,7 +45,7 @@ const Places = () => {
 
 const Place = (props) => {
     return (
-        <li className="place" onClick={() => props.setSelected(props.selected ? -1 : props.id)}>
+        <li className="place" onClick={() => props.setSelected(props.id) }>
             <h2>Nombre Fantasia: {props.nombre_fantasia}</h2>
             <br />
             <span>Localidad: {props.localidad} </span>
@@ -115,10 +115,18 @@ const Silo = (props) => {
         props.setSilos(newArr);  
     }
 
-    const TonsChanged = index => e => {
+    const CapacityChanged = index => e => {
         let newArr = [...props.silos]; 
     
         newArr[index].toneladas = parseInt(e.target.value)
+      
+        props.setSilos(newArr);  
+    }
+
+    const MeditionChanged = index => e => {
+        let newArr = [...props.silos]; 
+    
+        newArr[index].medida = e.target.value
       
         props.setSilos(newArr);  
     }
@@ -135,8 +143,13 @@ const Silo = (props) => {
                 <option value="Celda">Celdas</option>
             </select>
             <br />
-            <span>Toneladas:</span>
-            <input type="number" value={props.silos[props.index].toneladas} className="toneladasDeSilo" onChange={ TonsChanged(props.index)}/>
+            <span>Capacidad:</span>
+            <input type="number" value={props.silos[props.index].capacidad} className="toneladasDeSilo" onChange={ CapacityChanged(props.index)}/>
+            <br />
+            <select value={props.silos[props.index].medida} onChange={ MeditionChanged(props.index)}>
+                <option value="toneladas">Toneladas</option>
+                <option value="litros">Litros</option>
+            </select>
         </div>
     )
 }
@@ -148,7 +161,7 @@ const RenderSilos = (props) => {
         const newNumber = props.cantidadDeSilos - silos.length
 
         for (let i = 0; i < newNumber; i++) {
-            silos.push({ planta_id: props.placeId, nombre_de_silo:'', tipo_de_silo: '', toneladas: 0})
+            silos.push({ planta_id: props.placeId, nombre_de_silo:'', tipo_de_silo: '', capacidad: 0, medida: ''})
         }
     
 
@@ -175,7 +188,6 @@ const SilosPopup = (props) => {
                 silos={props.silos}
                 setSilos={props.setSilos}
                 cantidadDeSilos={props.cantidadDeSilos}
-                setCantidadDeSilos={props.setCantidadDeSilos}
                 placeId={props.placeId}
             />
             <input type="submit" value="Agregar Info" onClick={() => {
@@ -184,7 +196,7 @@ const SilosPopup = (props) => {
         </div>
 )}
 
-const EditPopUp = (props) => {
+const EditPopUpPlace = (props) => {
     const placeId = props.selected
     
     const [openPopupSilosInfo, setPopupSilosInfo] = useState(false)
@@ -212,7 +224,7 @@ const EditPopUp = (props) => {
 
     const chargeSilosFromPLace = async (id) => {
         try {
-            await fetch(`http://localhost:3333/places//allSilos/${id}`, {
+            await fetch(`http://localhost:3333/places/allSilos/${id}`, {
                 method: "GET",
                 headers: {
                     "Content-Type" : "application/json",
