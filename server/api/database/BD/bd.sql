@@ -64,7 +64,8 @@ CREATE TABLE silos
  "id"             bigserial NOT NULL,
  planta_id      bigint NOT NULL,
  tipo_de_silo   varchar(50) NOT NULL,
- toneladas      int NOT NULL,
+ capacidad      int NOT NULL,
+ medida 		varchar(50) NOT NULL,
  nombre_de_silo varchar(50) NOT NULL,
  CONSTRAINT PK_54 PRIMARY KEY ( "id" ),
  CONSTRAINT FK_55 FOREIGN KEY ( planta_id ) REFERENCES plantas ( "id" )
@@ -79,6 +80,7 @@ CREATE TABLE silos
 	DELETE FROM silos WHERE id > 0
 	
 	SELECT id FROM plantas WHERE padron = '23e'
+	
 
 
 
@@ -148,12 +150,14 @@ CREATE TABLE operarios
 CREATE TABLE trabajos
 (
  "id"              bigserial NOT NULL,
+ fecha			 date NOT NULL,
  cliente_id      bigint NOT NULL,
  planta_id       bigint NOT NULL,
  fecha_de_inicio date NOT NULL,
  tipo_de_trabajo varchar(50) NOT NULL,
  descripcion varchar(200) NULL,
  cantidad_de_silos int NULL,
+ previa 		 boolean NULL,
  entregado       boolean NULL,
  terminado       boolean NULL,
  facturado       boolean NULL,
@@ -168,10 +172,12 @@ CREATE TABLE trabajos
 
 	INSERT INTO trabajos (id, cliente_id, planta_id, fecha_de_inicio, tipo_de_trabajo, descripcion, cantidad_de_silos, entregado, terminado, facturado, vigente ) 
 	VALUES ('0', '1', '45', '01-01-1999', 'fumigación', '', 3,false, false, false, true) 
-
-
-	SELECT * FROM trabajos 
 	
+	SELECT trabajos.*, clientes.nombre_fantasia, plantas.nombre_fantasia AS nombre_fantasia_planta FROM trabajos INNER JOIN clientes ON trabajos.cliente_id = clientes.id INNER JOIN plantas ON trabajos.planta_id = plantas.id WHERE previa = true AND entregado = false AND terminado = false AND facturado = false  ORDER BY id
+	
+	SELECT * FROM trabajos WHERE id = 15
+	
+	UPDATE trabajos SET vigente = false WHERE id = 15
 	DELETE FROM trabajos WHERE id = 8
 
 	
@@ -238,19 +244,22 @@ CREATE TABLE gastos
  no_receta    varchar(50) NULL,
  descripcion  varchar(500) NULL,
  noches_hospedaje       int NULL,
- entradaFecha_hospedaje      date NULL,
+ entrada_fecha_hospedaje      date NULL,
  fecha_gasto  date NOT NULL,
  tipo_gasto varchar(50) NOT NULL,
  CONSTRAINT PK_111 PRIMARY KEY ( "id" ),
- CONSTRAINT FK_184 FOREIGN KEY ( usuario_id ) REFERENCES operarios_trabajo ( "id" ),
+ CONSTRAINT FK_184 FOREIGN KEY ( usuario_id ) REFERENCES users ( "id" ),
  CONSTRAINT FK_79 FOREIGN KEY ( id_trabajo ) REFERENCES trabajos ( "id" )
 );
+
+
 
 SELECT * FROM gastos WHERE id_trabajo = 0 ORDER BY fecha_gasto;
 INSERT INTO gastos (id_trabajo, usuario_id, insumo, costo, moneda, cantidad, no_factura, rut, proveedor, no_receta, descripcion, noches_hospedaje, fecha_gasto, tipo_gasto )
 	VALUES (0, 2, 'ruedas', 1000, 'USD', 2, 'dmwl21s', 8390239, 'Martinelli', null, 'Muy buenas ruedas que ruedan rápido.', null, '1996-08-15', 'Fumigacón' )
 	
-
+INSERT INTO gastos (id_trabajo, usuario_id, insumo, costo, moneda, cantidad, no_factura, rut, proveedor, no_receta, descripcion, noches_hospedaje, "entradaFecha_hospedaje", fecha_gasto, tipo_gasto) 
+VALUES (0, '', '', '', '', '', '', '', '', '', '', '', '', '', '')
 
 
 
