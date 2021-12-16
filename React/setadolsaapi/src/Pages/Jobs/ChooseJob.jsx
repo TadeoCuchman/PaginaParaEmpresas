@@ -8,7 +8,7 @@ const ChooseJob = (props) => {
   const [popUpJobInfo, setPopupJobInfo] = useState(false)
   const [allClients, setAllClients] = useState([])
   const [allPlaces, setAllPlaces] = useState([])
-
+  const [job, setJob] = useState({})
 
   useEffect(() => {
     AllJobs()
@@ -16,6 +16,7 @@ const ChooseJob = (props) => {
     chargePlaces()
   }, [])
 
+  console.log(job)
 
   
   const chargeClients = async () => {
@@ -32,6 +33,7 @@ const ChooseJob = (props) => {
         alert(err);
         }
   }
+
 
   const chargePlaces = async () => {
     try{
@@ -50,7 +52,7 @@ const ChooseJob = (props) => {
 
   const AllJobs = async () => {
     try{
-      await fetch('http://localhost:3333/jobs/allJobs', {
+      await fetch('http://localhost:3333/jobs/onProcess', {
           method: "GET",
           headers: {
               "Content-Type" : "application/json",
@@ -65,6 +67,9 @@ const ChooseJob = (props) => {
   }
 
 
+
+
+
   return (
     <main>
       <br />
@@ -74,7 +79,7 @@ const ChooseJob = (props) => {
       <br />
       <br />
       { option !== '' &&
-      <Link to={`/Job/${option}`}><button>Enter</button></Link>}
+      <Link to={`/Job/${option}`} state={{'hola': 'hola'}}><button>Enter</button></Link>}
       { option !== '' && popUpJobInfo && 
         <InfoDiv 
           popUpJobInfo={popUpJobInfo}
@@ -82,7 +87,6 @@ const ChooseJob = (props) => {
           option={option}
           allPlaces={allPlaces}
           allClients={allClients}
-          setJob={props.setJob}
         />}
     </main>
   )
@@ -96,8 +100,6 @@ const InfoDiv = (props) => {
   const job = array.find((job) => job.id === props.option)
   const client = clients.find((client) => client.id === job.cliente_id)
   const place = places.find((place) => place.id === job.planta_id)
-
-  props.setJob(job)
 
   
   return(
@@ -130,7 +132,7 @@ const SelectJob = (props) => {
       props.setPopupJobInfo(true)
       }}>
       <option value=''> Trabajo: </option>
-      { array.map((option, key) => {
+      { array && array.map((option, key) => {
         return ( <OptionJob
           key={key}
           jobId={option.id} 

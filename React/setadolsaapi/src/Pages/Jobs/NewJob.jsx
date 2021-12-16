@@ -3,10 +3,10 @@ import { useState, useEffect } from 'react';
 
 const NewJob = () => {
     const [openPopUpInstalationes, setPopUpInstalaciones] = useState(false)
-    const [allSilos, setAllSilos] = useState([])
     const [selectedClient, setSelectedClient] = useState(-1)
     const [selectedPlace, setSelectedPlace] = useState(-1)
     
+    const [code, setCode] = useState('')
     const [start_date, setStartDate] = useState('')
     const [typeOfJob, setTypeOfJob] = useState('')
     const [description, setDescription] = useState('')
@@ -16,7 +16,6 @@ const NewJob = () => {
     const [allClients, setAllClients] = useState([])
     const [allPlaces, setAllPlaces] = useState([])
     
-    console.log(silosArray)
 
 
     useEffect(() => {
@@ -68,7 +67,7 @@ const NewJob = () => {
               "auth-token" : localStorage.getItem("jwt")
           },
           }).then(response => response.json())
-          .then(data => console.log(data.array))
+          .then(data => setSilosArray(data.array))
       }catch (err) {
         alert('silos' + err);
       }
@@ -79,14 +78,15 @@ const NewJob = () => {
         const newJob = {
             client_id: selectedClient,
             place_id: selectedPlace,
+            code,
             start_date,
             typeOfJob,
             description,
-            cantidadDeSilos,
             silosArray 
         }
+      
   
-        await fetch('http://localhost:3333/jobs/addFumi',{
+        await fetch('http://localhost:3333/jobs/addJob',{
           method: "POST",
           headers:{
               "Content-Type": "application/json",
@@ -99,24 +99,24 @@ const NewJob = () => {
             if (res.success === false) {
                 alert (res.message);
             } else {
-                alert (res.message);               
+                alert (res.message)
+                setStartDate('')
+                setTypeOfJob('')
+                setDescription('')
+                setCantidadDeSilos(0)
+                setSilosArray([])
+                setSelectedClient('')
+                setSelectedPlace('')
             }
         })
   
       }catch(err) {
-        alert(err);
+        alert('Error con servidor' + err);
       }
       
     }
   
-    const inicializarSilos = (a) => {
-      const silos1 = []
-   
-      for (let i = 1; i <= a; i++) {
-        silos1.push({silo_Id: '', cantidad_de_substrato:'' , tipo_de_producto: '' , cantidad_de_producto: '', checkbox: false})
-      }
-      setSilosArray(silos1)
-    }
+
     
     return (
       <main>
@@ -125,9 +125,12 @@ const NewJob = () => {
         <br />
         <form method = 'POST' id='form-NewFumi' onSubmit={handleSubmit}>
           <span>Cliente*:</span>
-          <RenderOptions array={allClients} selections={'Cliente'} setSelected={setSelectedClient} setCantidadDeSilos={setCantidadDeSilos}/>
+          <RenderOptions array={allClients} selections={'Cliente'} setSelected={setSelectedClient} />
           <span>Lugar*:</span>
           <RenderOptions array={allPlaces} selections={'Planta'} setSelected={setSelectedPlace} setCantidadDeSilos={setCantidadDeSilos} chargeSilos={chargeSilos}/>
+          <br />
+          <span>Codigo*:</span>
+          <input type="text" value={code} onChange={(e) => setCode(e.target.value)} />
           <br />
           <span>Fecha de Inicio*:</span>
           <input value={start_date} type="date" onChange={(e) => setStartDate(e.target.value) }/>
@@ -142,14 +145,13 @@ const NewJob = () => {
           <br />
           <span>Instalaciones*:</span>
           <button onClick={() => {
-            inicializarSilos(cantidadDeSilos)
             setPopUpInstalaciones(true)
           }}>Ingresar Instalaciones a Usar</button>
           {openPopUpInstalationes && 
             <SilosPopup 
               cantidadDeSilos={cantidadDeSilos} 
               setCantidadDeSilos={setCantidadDeSilos}
-              allSilos={allSilos} selected={selectedPlace} 
+              selected={selectedPlace} 
               setPopUpInstalaciones={setPopUpInstalaciones}
               silosArray={silosArray}
               setSilosArray={setSilosArray}
@@ -179,8 +181,9 @@ const RenderOptions = (props) => {
   return (
     <select onChange={(e) => {
       props.setSelected(e.target.value)
-      props.setCantidadDeSilos(SetPlacesSilos(array, e.target.value))
+      if (props.chargeSilos){
       props.chargeSilos(e.target.value)
+      }
     }}>
       <option value=''>{`Seleccionar ${props.selections}:`}</option>
       { array.map((option, key) => {
@@ -197,18 +200,13 @@ const RenderOptions = (props) => {
 
 
 
-const SetPlacesSilos = (array, id) => {
-  const result = array.find(((silo) => silo.id === id))
-  console.log(result)
-
-  return (result.cantidad_de_silos)
-}
 
 const Silo = (props) => {
 
   useEffect(() => {
     let newArr = [...props.silosArray]; 
     newArr[props.index].silo_Id = props.id
+    newArr[props.index].tipo_de_producto = ''
     props.setSilosArray(newArr); 
   }, [])
 
@@ -257,7 +255,7 @@ const Silo = (props) => {
         <br />
         <span>Tipo de Silo: {props.tipo_de_silo}</span>
         <br />
-        <span>Toneladas: {props.toneladas}</span>
+        <span>Capacidad: {props.capacidad}  {props.medida}</span>
         <br />
         <span>Cantidad de substrato (toneladas):</span>
         <input type="number" value={`${props.silosArray[props.index].cantidad_de_substrato}`} onChange={ SubstratCantChanged(props.index)}/>
@@ -272,8 +270,9 @@ const Silo = (props) => {
 }
 
 const RenderSilos = (props) => {
-  const silos = props.result
-  
+  const silos = props.silosArray
+
+
   if (silos) {
     return(
       <div id="silos">
@@ -284,7 +283,8 @@ const RenderSilos = (props) => {
             id={silo.id}
             nombre_de_silo={silo.nombre_de_silo}
             tipo_de_silo={silo.tipo_de_silo}
-            toneladas={silo.toneladas}
+            capacidad={silo.capacidad}
+            medida={silo.medida}
             silosArray={props.silosArray} 
             setSilosArray={props.setSilosArray} 
             />)
@@ -296,21 +296,17 @@ const RenderSilos = (props) => {
 
 
 const SilosPopup = (props) => {
-  const result = props.allSilos.filter((silo) => silo.planta_id === props.selected)
 
   return (
     <div className="silosInfo"> 
           <button onClick={() => props.setPopUpInstalaciones(false)}>X</button>
           <RenderSilos 
-            cantidadDeSilos={props.cantidadDeSilos} 
-            setCantidadDeSilos={props.setCantidadDeSilos} 
-            result={result}
             silosArray={props.silosArray} 
             setSilosArray={props.setSilosArray} 
+            chargeSilos={props.chargeSilos}
             />
           <input type="submit" value="Agregar Info" onClick={() => {
             props.setPopUpInstalaciones(false)
-            
           } }/>
     </div>
 

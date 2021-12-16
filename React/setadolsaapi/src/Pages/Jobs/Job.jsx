@@ -1,92 +1,63 @@
 import React from 'react';
-import { useParams } from 'react-router-dom'
+import { useParams, useLocation } from 'react-router-dom'
 import { useState, useEffect} from 'react'
 import ListOfExpences from '../../Components/ListOfExpences';
 
 import { ReactComponent as NewTaskIcon} from '../../Icons/NewTask.svg'
 import { ReactComponent as ExitIcon } from '../../Icons/Exit.svg'
   
-const Job = (props) => {
+const Job = () => {
   const [addPopup, setAddPopup] = useState('')
   const { id } = useParams('')
   const [insumo, setInsumo] = useState('')
-  const [costo, setCosto] = useState('')
-  const [moneda, setMoneda] = useState('')
-  const [cantidad, setCantidad] = useState('')
+  const [costo, setCosto] = useState(0)
+  const [moneda, setMoneda] = useState('$')
+  const [cantidad, setCantidad] = useState(0)
   const [no_factura, setNo_factura] = useState('')
-  const [rut, setRut] = useState('')
+  const [rut, setRut] = useState()
   const [proveedor, setProveedor] = useState('')
   const [no_de_receta, setNo_de_receta] = useState('')
   const [descripcion, setDescripcion] = useState('')
-  const [noches, setNoches] = useState('')
+  const [noches, setNoches] = useState(0)
   const [fecha_entrada, setFecha_entrada] = useState('')
+  const [fecha_gasto, setFecha_gasto] = useState('')
   
   const [allExpences, setAllExpences] = useState([])
+  const [jobInfo, setJobInfo] = useState({
+    tipo_de_trabajo: '',
+    id: ''
+  })
+
+  const [advertisement, openAdvertisment] = useState(false)
   
-  console.log(props.job)
+  // const location = useLocation()
+
+  // console.log(location)
 
   useEffect(() => {
-    chargeExpences()
+    chargeExpences(id)
+    chargeJob(id)
   }, [])
 
-  //obtener objeto del trabajo desde la pagina anterior 
 
-
-  const posting = async () => {
-    try {
-        const postBody = {
-          trabajo_id: id,
-          tipo: addPopup,
-          insumo,
-          costo,
-          moneda,
-          cantidad,
-          no_factura,
-          rut,
-          proveedor,
-          no_de_receta,
-          descripcion,
-          noches,
-          fecha_entrada 
-      }
-    
-      fetch('http://localhost:4000/jobs/addToJob', {
-            method: "POST",
-            headers: {
-                  "Content-Type" : "application/json",
-                  "auth-token" : localStorage.getItem("jwt")
-            },
-            body: JSON.stringify(postBody)
-      }).then(function(respuesta) {
-          return respuesta.json()
-      }).then(function(res) {
-          if (!res.succes) {
-              alert (res.message);
-          }else{ 
-            alert (res.message)
-            setAddPopup('')
-            setInsumo('')
-            setCosto('')
-            setMoneda('')
-            setCantidad('')
-            setNo_factura('')
-            setRut('')
-            setProveedor('')
-            setNo_de_receta('')
-            setDescripcion('')
-            setNoches('')
-            setFecha_entrada('')
-          }
-      }).then(() => { 
-      })
-    } catch (err) {
-      alert('No conexión con servidor.')
+  const chargeJob = async (a) => {
+    try{
+      await fetch(`http://localhost:3333/jobs/infoJob/${a}`, {
+        method: "GET",
+        headers: {
+            "Content-Type" : "application/json",
+            "auth-token" : localStorage.getItem("jwt")
+        },
+        }).then(response => response.json())
+        .then(data => setJobInfo(data.array))
+    }catch (err) {
+      alert(err);
     }
   }
 
-  const chargeExpences = async () => {
+  const chargeExpences = async (a) => {
     try{
-      await fetch(`http://localhost:3333/jobs/allExpences/${id}`, {
+      await fetch(`http://localhost:3333/jobs/allExpences/${a}`, {
         method: "GET",
         headers: {
             "Content-Type" : "application/json",
@@ -99,27 +70,53 @@ const Job = (props) => {
     }
   }
 
+  const deliverJob = async (a, job) => {
+    try{
+      const Job = job
+    
+      await fetch(`http://localhost:3333/jobs/deliverJob/${a}`,{
+        method: "POST",
+        headers:{
+            "Content-Type": "application/json",
+            "auth-token" : localStorage.getItem("jwt")
+        },
+        body: JSON.stringify(Job)
+      }).then(function(respuesta) {
+          return respuesta.json()
+      }).then(function (res) {
+          if (res.success === false) {
+              alert (res.message);
+          } else {
+              alert (res.message)
+          }
+      })
+
+    }catch(err) {
+      alert('Error con servidor' + err);
+    }
+  }
+
  function resetStates (type) {
   setAddPopup(type)
   setInsumo('')
   setCosto('')
-  setMoneda('')
-  setCantidad('')
+  setMoneda('$Pesos')
+  setCantidad(0)
   setNo_factura('')
   setRut('')
   setProveedor('')
   setNo_de_receta('')
   setDescripcion('')
-  setNoches('')
-  setFecha_entrada('')
+  setNoches(0)
+  setFecha_entrada(null)
  }
 
   return (
     <main id="main_Fumi">
-      <h1>{props.job.tipo}: {id}.</h1>
+      <h1>{jobInfo.tipo_de_trabajo}: {jobInfo.codigo}.</h1>
       <br />
       <div className="info">
-        <ListOfExpences array={allExpences}/>
+        <ListOfExpences spends={allExpences}/>
       </div>
       
       < div className="addButtons">
@@ -157,41 +154,46 @@ const Job = (props) => {
         <br />
         <span>Entregar</span>
         <br />
-        <button><ExitIcon/></button>
+        <button onClick={() =>{
+          openAdvertisment(true)
+        }}><ExitIcon/></button>
+        {advertisement && <Advertisement openAdvertisment={openAdvertisment} deliverJob={deliverJob} id={id} jobInfo={jobInfo}/>}
         <br />
         <br />
         <br />
       </div>
       <br />
       { (addPopup !== '') && 
-      <AddPopup 
-        id={id}
-        posting={posting}
-        addPopup={addPopup}
-        setAddPopup={setAddPopup}
-        insumo={insumo}
-        setInsumo={setInsumo}
-        costo={costo}
-        setCosto={setCosto}
-        moneda={moneda}
-        setMoneda={setMoneda}
-        cantidad= {cantidad}
-        setCantidad= {setCantidad}
-        no_factura= {no_factura}
-        setNo_factura= {setNo_factura}
-        rut={rut}
-        setRut= {setRut}
-        proveedor= {proveedor}
-        setProveedor= {setProveedor}
-        no_de_receta= {no_de_receta}
-        setNo_de_receta= {setNo_de_receta}
-        descripcion= {descripcion}
-        setDescripcion= {setDescripcion}
-        noches= {noches}
-        setNoches= {setNoches}
-        fecha_entrada= {fecha_entrada}
-        setFecha_entrada = {setFecha_entrada}
-      />}
+        <AddPopup 
+          id={id}
+          addPopup={addPopup}
+          setAddPopup={setAddPopup}
+          insumo={insumo}
+          setInsumo={setInsumo}
+          costo={costo}
+          setCosto={setCosto}
+          moneda={moneda}
+          setMoneda={setMoneda}
+          cantidad= {cantidad}
+          setCantidad= {setCantidad}
+          no_factura= {no_factura}
+          setNo_factura= {setNo_factura}
+          rut={rut}
+          setRut= {setRut}
+          proveedor= {proveedor}
+          setProveedor= {setProveedor}
+          no_de_receta= {no_de_receta}
+          setNo_de_receta= {setNo_de_receta}
+          descripcion= {descripcion}
+          setDescripcion= {setDescripcion}
+          noches= {noches}
+          setNoches= {setNoches}
+          fecha_entrada= {fecha_entrada}
+          setFecha_entrada = {setFecha_entrada}
+          fecha_gasto={fecha_gasto}
+          setFecha_gasto={setFecha_gasto}
+          chargeExpences= {chargeExpences}
+        />}
     </main>
     )
 }
@@ -199,10 +201,36 @@ const Job = (props) => {
 
 const Moneda = (props) => {
   return(
-    <select value='$' onChange={(e) => props.setMoneda(e.target.value)}>
-      <option value="$"> Pesos </option>
+    <select  onChange={(e) => props.setMoneda(e.target.value)}>
+      <option value="$Pesos"> Pesos </option>
       <option value="USD$"> USD </option>
     </select>
+  )
+}
+
+const Costo = (props) => {
+  return (
+    <>
+      <br />
+      <span>Costo:</span>
+      <br />
+      <input type="number" placeholder="" value={props.costo} onChange={(e) => props.setCosto(e.target.value)}/>
+    </>
+  )
+}
+
+const FechaGasto = (props) => {
+  const n = new Date
+  const y = n.getFullYear();
+  const m = n.getMonth() + 1;
+  const d = n.getDate();
+  return (
+    <>
+      <span>Fecha Gasto:</span>
+      <br />
+      <input type="date" value={d + "/" + m + "/" + y} value={props.fecha_gasto} onChange={(e) => props.setFecha_gasto(e.target.value)} />
+      <br />
+    </>
   )
 }
 
@@ -216,19 +244,16 @@ const Render = (props) => {
         <span>Insumo:</span>  
         <br />
         <input type="text" placeholder="" value={props.insumo} onChange={(e) => props.setInsumo(e.target.value)}/>
-        <br />
-        <span>Costo:</span>
-        <br />
-        <input type="text" placeholder="" value={props.costo} onChange={(e) => props.setCosto(e.target.value)}/>
+        <Costo costo={props.costo} setCosto={props.setCosto}/>
         <br />
         <span>Moneda:</span>
         <br />
-        <Moneda setMoneda={props.setMoneda}/>
+        <Moneda setMoneda={props.setMoneda} moneda={props.moneda}/>
         <br />
         <br />
         <span>Cantidad:</span>
         <br />
-        <input type="text" placeholder="" value={props.cantidad} onChange={(e) => props.setCantidad(e.target.value)}/>
+        <input type="number" placeholder="" value={props.cantidad} onChange={(e) => props.setCantidad(e.target.value)}/>
         <br />
         <span>No.Factura:</span>
         <br />
@@ -250,6 +275,7 @@ const Render = (props) => {
         <br />
         <input type="text" placeholder="" value={props.descripcion} onChange={(e) => props.setDescripcion(e.target.value)}/>
         <br />
+        <FechaGasto fecha_gasto={props.fecha_gasto} setFecha_gasto={props.setFecha_gasto}/>
         <br />
       </> )
   } else if (props.addPopup === 'Alimentación') {
@@ -257,15 +283,15 @@ const Render = (props) => {
       <>
         <h1>Agregar a Alimentación:</h1>
         <br />  
-        <span>Cantidad:</span>  
+        <span>Cantidad de Comidas:</span>  
         <br />
-        <input type="text" placeholder="" value={props.cantidad} onChange={(e) => props.setInsumo(e.target.value)}/>
+        <input type="number" placeholder="" value={props.cantidad} onChange={(e) => props.setCantidad(e.target.value)}/>
         <br />
         <span>Costo:</span>
         <br />
         <input type="text" placeholder="" value={props.costo} onChange={(e) => props.setCosto(e.target.value)}/>
         <br />
-        <Moneda setMoneda={props.setMoneda}/>
+        <Moneda setMoneda={props.setMoneda}  moneda={props.moneda}/>
         <br />
         <span>No.Factura:</span>
         <br />
@@ -283,6 +309,7 @@ const Render = (props) => {
         <br />
         <input type="text" placeholder="" value={props.descripcion} onChange={(e) => props.setDescripcion(e.target.value)}/>
         <br />
+        <FechaGasto fecha_gasto={props.fecha_gasto} setFecha_gasto={props.setFecha_gasto}/>
         <br />
       </> )
   } else if (props.addPopup === 'Transporte') {
@@ -298,11 +325,11 @@ const Render = (props) => {
         <br />
         <input type="text" placeholder="" value={props.costo} onChange={(e) => props.setCosto(e.target.value)}/>
         <br />
-        <Moneda setMoneda={props.setMoneda}/>
+        <Moneda setMoneda={props.setMoneda}  moneda={props.moneda}/>
         <br />
         <span>Cantidad (Litros):</span>
         <br />
-        <input type="text" placeholder="" value={props.cantidad} onChange={(e) => props.setCantidad(e.target.value)}/>
+        <input type="number" placeholder="" value={props.cantidad} onChange={(e) => props.setCantidad(e.target.value)}/>
         <br />
         <span>No.Factura:</span>
         <br />
@@ -316,6 +343,7 @@ const Render = (props) => {
         <br />
         <input type="text" placeholder="" value={props.proveedor} onChange={(e) => props.setProveedor(e.target.value)}/>
         <br />
+        <FechaGasto fecha_gasto={props.fecha_gasto} setFecha_gasto={props.setFecha_gasto}/>
         <br />
       </> )
   } else if (props.addPopup === 'Hospedaje') {
@@ -331,11 +359,11 @@ const Render = (props) => {
         <br />
         <input type="text" placeholder="" value={props.costo} onChange={(e) => props.setCosto(e.target.value)}/>
         <br />
-        <Moneda setMoneda={props.setMoneda}/>
+        <Moneda setMoneda={props.setMoneda}  moneda={props.moneda}/>
         <br />
         <span>Noches:</span>
         <br />
-        <input type="text" placeholder="" value={props.noches} onChange={(e) => props.setNoches(e.target.value)}/>
+        <input type="number" placeholder="" value={props.noches} onChange={(e) => props.setNoches(e.target.value)}/>
         <br />
         <span>No.Factura:</span>
         <br />
@@ -347,11 +375,13 @@ const Render = (props) => {
         <br />
         <span>Entrada:</span>
         <br />
-        <input type="text" placeholder="" value={props.fecha_entrada} onChange={(e) => props.setFecha_entrada(e.target.value)}/>
+        <input type="date" placeholder="" value={props.fecha_entrada} onChange={(e) => props.setFecha_entrada(e.target.value)}/>
         <br />
         <span>Descripción:</span>
         <br />
         <input type="text" placeholder="" value={props.descripcion} onChange={(e) => props.setDescripcion(e.target.value)}/>
+        <br />
+        <FechaGasto fecha_gasto={props.fecha_gasto} setFecha_gasto={props.setFecha_gasto}/>
         <br />
       </> )
   } else { return (null)}
@@ -360,9 +390,66 @@ const Render = (props) => {
 
 const AddPopup = (props) => {
 
+
   const handleSubmit = (event) => {
     event.preventDefault();
   };
+
+
+  const posting = async (a) => {
+    try {
+        
+        const postBody = {
+          tipo: props.addPopup,
+          insumo: props.insumo,
+          costo: parseInt(props.costo),
+          moneda: props.moneda,
+          cantidad: parseInt(props.cantidad),
+          no_factura: props.no_factura,
+          rut: parseInt(props.rut),
+          proveedor: props.proveedor,
+          no_de_receta: props.no_de_receta,
+          descripcion: props.descripcion,
+          noches: parseInt(props.noches),
+          fecha_entrada: props.fecha_entrada,
+          fecha_gasto: props.fecha_gasto
+      }
+      console.log(postBody)
+
+      await fetch(`http://localhost:3333/jobs/addToJob/${a}`, {
+            method: "POST",
+            headers: {
+                  "Content-Type" : "application/json",
+                  "auth-token" : localStorage.getItem("jwt")
+            },
+            body: JSON.stringify(postBody)
+      }).then(function(respuesta) {
+          return respuesta.json()
+      }).then(function(res) {
+          if (!res.succes) {
+              alert (res.message);
+          }else{ 
+            alert (res.message)
+            props.chargeExpences(props.id)
+            props.setAddPopup('')
+            props.setInsumo('')
+            props.setCosto('')
+            props.setMoneda('')
+            props.setCantidad('')
+            props.setNo_factura('')
+            props.setRut('')
+            props.setProveedor('')
+            props.setNo_de_receta('')
+            props.setDescripcion('')
+            props.setNoches('')
+            props.setFecha_entrada('')
+            props.setFecha_gasto('')
+          }
+      })
+    } catch (err) {
+      alert('No conexión con servidor.' + err)
+    }
+  }
 
   return (
       <div className="popUp_div"> 
@@ -373,8 +460,8 @@ const AddPopup = (props) => {
             tipo = {props.addPopup}
             insumo = {props.insumo}
             setInsumo = {props.setInsumo}
-            costo = {props.setInsumo}
-            setCosto = {props.costo}
+            costo = {props.costo}
+            setCosto = {props.setCosto}
             moneda = {props.moneda}
             setMoneda = {props.setMoneda}
             cantidad = {props.cantidad}
@@ -393,13 +480,27 @@ const AddPopup = (props) => {
             setNoches = {props.setNoches}
             fecha_entrada = {props.fecha_entrada}
             setFecha_entrada = {props.setFecha_entrada}
+            fecha_gasto = {props.fecha_gasto}
+            setFecha_gasto = {props.setFecha_gasto}
           />
-          <input type="submit" value="Agregar" onClick={() => props.posting()}/>
+          <input type="submit" value="Agregar" onClick={() => posting(props.id)}/>
         </form>
       </div>
   )
 }
 
+const Advertisement = (props) => {
+  return (
+    <div className='advertisement'>
+      <>
+        <h1>Seguro querés entregar el trabajo?</h1>
+        <br />
+        <button onClick={() => props.openAdvertisment(false)}>Cancelar</button>
+        <button onClick={() => props.deliverJob(props.id, props.jobInfo)}>Entregar</button>
+      </>
+    </div>
+  )
+}
 
   
   

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 
 import { ListOfJobs } from "./JobsInProcess"
 
-const CloseJob = () => {
+const FinishJob = () => {
     const [allJobs, setAllJobs] = useState([])
     const [selected, setSelected] = useState(-1)
     
@@ -14,7 +14,7 @@ const CloseJob = () => {
 
     const AllJobs = async () => {
         try{
-            await fetch('http://localhost:3333/jobs/delivereds', {
+            await fetch('http://localhost:3333/jobs/closeds', {
                 method: "GET",
                 headers: {
                     "Content-Type" : "application/json",
@@ -27,11 +27,11 @@ const CloseJob = () => {
         }
     }
 
-    const closeJob = async (a, array) => {
+    const finishJob = async (a, array) => {
         try{
             const Job = array.find((job) => job.id === a)
             if (Job){
-            await fetch(`http://localhost:3333/jobs/closeJob/${a}`,{
+            await fetch(`http://localhost:3333/jobs/finishJob/${a}`,{
                 method: "POST",
                 headers:{
                     "Content-Type": "application/json",
@@ -57,11 +57,11 @@ const CloseJob = () => {
 
     return (
         <main>
-            <button onClick={() => closeJob(selected, allJobs)}>Cerrar Trabajo</button>
+            <button onClick={() => finishJob(selected, allJobs)}>Facturar Trabajo</button>
             <span>{selected}</span>
             <ListOfJobs jobs={allJobs} selected={selected} setSelected={setSelected}/>
         </main>
     )
 }
 
-export default CloseJob;
+export default FinishJob;
