@@ -32,8 +32,10 @@ import Job from './Pages/Jobs/Job'
 import CloseJob from './Pages/Jobs/CloseJob'
 import Clients from './Pages/Clients/Clients'
 import Places from './Pages/Places/Places'
-import JobsDone from './Pages/Jobs/JobsDone'
+import ClosedJobs from './Pages/Jobs/ClosedJobs'
 import JobsInProcess from './Pages/Jobs/JobsInProcess'
+import FinishJob from './Pages/Jobs/FinishJob'
+import FinishedJobs from './Pages/Jobs/FinishedJobs'
 import Stock from './Pages/Stock/Stock'
 import Workers from './Pages/Workers/Workers';
 import NewWorker from './Pages/Workers/NewWorker/NewWorker'
@@ -43,7 +45,7 @@ import Users from './Pages/Users/Users'
 import NewContact from './Pages/Clients/Contacts/NewContact'
 import Contacts from './Pages/Clients/Contacts/Contacts'
 import Spences from './Pages/Jobs/Spences'
-import cuchmanSaiPhoto from './photos/cuchmanSaiPhoto.png';
+import Info from './Pages/Info/Info'
 
 if (typeof window.ethereum.autoRefreshOnNetworkChange !== "undefined") {
   window.ethereum.autoRefreshOnNetworkChange = false;
@@ -53,7 +55,6 @@ function App() {
   const [openAside, setAside] = useState(false);
   const [openApplications, setApplications] = useState(false)
   const [token, setToken] = useState(localStorage.jwt)
-  const [job, setJob] = useState(Object)
 
   return (
     <div className="App">
@@ -113,23 +114,29 @@ function App() {
           {//agregar a base de datos informacion para pedidos en tiempo real
           }
 
-          <Route path='/ChooseJob'>
-            <ChooseJob setJob={setJob} job={job}/>
-          </Route>
-          <Route exact path='/Job/:id'>
-            <Job job={job}/>
-          </Route>
           <Route path='/NewJob'>
             <NewJob />
+          </Route>
+          <Route path='/ChooseJob'>
+            <ChooseJob />
+          </Route>
+          <Route exact path='/Job/:id'>
+            <Job />
+          </Route>
+          <Route path='/JobsInProcess'>
+            <JobsInProcess />
           </Route>
           <Route path='/CloseJob'>
             <CloseJob />
           </Route>
-          <Route path='/JobsDone'>
-            <JobsDone />
+          <Route path='/ClosedJobs'>
+            <ClosedJobs />
           </Route>
-          <Route path='/JobsInProcess'>
-            <JobsInProcess />
+          <Route path='/FinishJob'>
+            <FinishJob />
+          </Route>
+          <Route path='/FinishedJobs'>
+            <FinishedJobs />
           </Route>
           
 
@@ -142,6 +149,11 @@ function App() {
             <Stock />
           </Route>
 
+          {//Consumo, cálculo y visualización de datos
+          }
+          <Route path='/Info'>
+            <Info />
+          </Route>
 
 
 

@@ -2,7 +2,7 @@ main {
   grid-area: main;
   position: relative;
   text-align: center;
-  background-color: #9c9da3;
+  background-color: white;
   overflow: auto;
 }
 
