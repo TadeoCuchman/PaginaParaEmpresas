@@ -16,6 +16,7 @@ const Users = () => {
         event.preventDefault();
       };
 
+    console.log(selected)
 
     const chargeUsers = async () => {
         try{
@@ -35,7 +36,7 @@ const Users = () => {
 
     const User = (props) => {
         return (
-            <li className="user" onClick={() => props.setSelected(props.id)}>
+            <li className="user" onClick={() => props.selected ? props.setSelected(-1) : props.setSelected(props.id)}>
                 <h4>Nombre: {props.name}</h4>
                 <br />
                 <span>Mail: {props.mail}</span>

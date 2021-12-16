@@ -63,7 +63,7 @@ const NewUser = () => {
                 <span>Rol*:</span>
                 <br />
                 <select onChange={(e) => setRol(e.target.value)}>
-                    <option selected disabled >Elegir Rol</option>
+                    <option value='' >Elegir Rol</option>
                     <option value="operario">Operario</option>
                     <option value="administrativo">Administrativo</option>
                     <option value="admin">Admin</option>
