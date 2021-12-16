@@ -60,7 +60,7 @@ const Clients = () => {
     
   const Client = (props) => {
     return (
-      <li className="client" onClick={() => props.setSelected(props.selected ? -1 : props.id)}>
+      <li className="client" onClick={() => props.setSelected(props.id)}>
         <h2>Nombre Fantasia: {props.nombre_fantasia}</h2>
         <br />
         <span>Razón Social: {props.razon_social}</span>
@@ -70,7 +70,8 @@ const Clients = () => {
         {props.selected && 
           <>
           <button onClick={() => setEditUserPopUp(true)}>Editar</button>
-
+          <br />
+          <span>Contactos:</span>
           <ListOfContacts contacts={setContacts(allContactsClients, props.id)} selected={selected} setSelected={setSelected}/>
           </>
           }
@@ -78,66 +79,66 @@ const Clients = () => {
     )
   }
 
-const EditPopUp = () => {
-  const result = allClients.find(client => client.id === selected)
+  const EditPopUp = () => {
+    const result = allClients.find(client => client.id === selected)
 
 
-  const [razon_social, setRazon_Social] = useState('' || result.razon_social)
-  const [nombre_fantasia, setNombre_Fantasia] = useState('' || result.nombre_fantasia)
-  const [rut, setRut] = useState('' || result.rut) 
+    const [razon_social, setRazon_Social] = useState('' || result.razon_social)
+    const [nombre_fantasia, setNombre_Fantasia] = useState('' || result.nombre_fantasia)
+    const [rut, setRut] = useState('' || result.rut) 
 
-  const modifyUser = async (a) => {
-      const modifyBody = {
-          razon_social,
-          nombre_fantasia,
-          rut
-      }
-      try {
-      await fetch(`http://localhost:3333/clients/${a}`, {
-              method: 'PUT',
-              headers: {
-                  "Content-Type" : "application/json",
-                  "auth-token" : localStorage.getItem("jwt")
-              },body: JSON.stringify(modifyBody)
-          }).then((respuesta) => {
-              return respuesta.json()
-          }).then(function (res) {
-              if (!res.succes) {
-                  alert (res.message);
-              }
-          }).then(() => { 
-              chargeClients()
-              setEditUserPopUp(false)
-          })
-      } catch (err) {
-          alert('Falló el Servidor')
-      }
+    const modifyUser = async (a) => {
+        const modifyBody = {
+            razon_social,
+            nombre_fantasia,
+            rut
+        }
+        try {
+        await fetch(`http://localhost:3333/clients/${a}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type" : "application/json",
+                    "auth-token" : localStorage.getItem("jwt")
+                },body: JSON.stringify(modifyBody)
+            }).then((respuesta) => {
+                return respuesta.json()
+            }).then(function (res) {
+                if (!res.succes) {
+                    alert (res.message);
+                }
+            }).then(() => { 
+                chargeClients()
+                setEditUserPopUp(false)
+            })
+        } catch (err) {
+            alert('Falló el Servidor')
+        }
+    }
+
+    return (
+      <div id="editUserPopUpDiv">
+          <button onClick={() => setEditUserPopUp(false)}>X</button>
+          <br />
+          <form action="PUT" onSubmit={handleSubmit}>
+              <span>Nombre Fantasia:</span>
+              <br />
+              <input type="text" value={nombre_fantasia} onChange={(e) => setNombre_Fantasia(e.target.value)}/>
+              <br />
+              <span>Razón Social:</span>
+              <br />
+              <input type="text" value={razon_social} onChange={(e) => setRazon_Social(e.target.value)}/>
+              <br />
+              <span>Rut:</span>
+              <br />
+              <input type="text" value={rut} onChange={(e) => setRut(e.target.value)}/>
+              <br />
+              <br />
+              <br />
+              <input type="submit" id="submit" onClick = { () =>  modifyUser(selected)} /> 
+          </form>
+      </div>
+    )
   }
-
-  return (
-    <div id="editUserPopUpDiv">
-        <button onClick={() => setEditUserPopUp(false)}>X</button>
-        <br />
-        <form action="PUT" onSubmit={handleSubmit}>
-            <span>Nombre Fantasia:</span>
-            <br />
-            <input type="text" value={nombre_fantasia} onChange={(e) => setNombre_Fantasia(e.target.value)}/>
-            <br />
-            <span>Razón Social:</span>
-            <br />
-            <input type="text" value={razon_social} onChange={(e) => setRazon_Social(e.target.value)}/>
-            <br />
-            <span>Rut:</span>
-            <br />
-            <input type="text" value={rut} onChange={(e) => setRut(e.target.value)}/>
-            <br />
-            <br />
-            <br />
-            <input type="submit" id="submit" onClick = { () =>  modifyUser(selected)} /> 
-        </form>
-    </div>
-)
-}
 
   const ListaOfClients = (props) => {
     const clients = props.clients

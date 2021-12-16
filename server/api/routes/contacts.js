@@ -24,6 +24,19 @@ router.get('/allContacts', verifyToken, async (req, res) => {
     }
 })
 
+router.get('/contactsClients', verifyToken, async (req, res) => {
+   try { 
+        const contactsClientes = await pool.query('SELECT contactos.*, clientes.nombre_fantasia FROM contactos INNER JOIN clientes ON contactos.cliente_id = clientes.id ORDER BY id')
+
+        const arraycontactsClientes = contactsClientes.rows
+
+        return res.json({ success: true, message: 'Todos los Contactos', arraycontactsClientes  }).status(200)
+
+} catch (err) {
+    return res.json({ success: false, message: 'Error en conexión con Base de Datos.' + JSON.stringify(err)}).status(500)    
+}
+})
+
 router.post('/newContact', verifyToken, async (req, res) => {
 
     try {

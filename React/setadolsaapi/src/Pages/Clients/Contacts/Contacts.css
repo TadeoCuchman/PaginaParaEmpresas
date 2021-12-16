@@ -6,7 +6,15 @@
 .contact {
   margin-top: 20px;
   border-radius: var(--border-radius);
-  border: var(--border);
+  border: 1.5px solid rgba(112, 196, 195, 255);
+  padding: 10px;
+  list-style: none;
+}
+
+.contact2 {
+  border: 2px solid rgba(108, 128, 57, 255);
+  margin-top: 20px;
+  border-radius: var(--border-radius);
   padding: 10px;
   list-style: none;
 }

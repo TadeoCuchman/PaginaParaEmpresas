@@ -1,18 +1,18 @@
 import React from 'react';
 import { useState, useEffect} from 'react'
+import Searcher from '../../../Components/Searcher';
 
-const Contacts = (props) => {
+const Contacts = () => {
 
     const [allContacts, setAllContacts] = useState([])
     const [editContactPopup, setEditContactPopUp] = useState(false)
     const [selected, setSelected] = useState(-1)
-    
 
-    
     useEffect(() => {
         chargeContacts()
     }, [])
     
+    console.log(selected)
     const chargeContacts = async () => {
         try {
             await fetch('http://localhost:3333/contacts/allContacts', {
@@ -26,7 +26,7 @@ const Contacts = (props) => {
         } catch(err) {
             alert('No conexión con Servidor')
         }
-        }
+    }
 
     
 
@@ -37,6 +37,8 @@ const Contacts = (props) => {
         <main>
             <br />
             <h1>Lista de Contactos:</h1>
+            <br />
+            <Searcher array={allContacts}/>
             <ListOfContacts contacts={allContacts} setEditContactPopUp={setEditContactPopUp} setSelected={setSelected} selected={selected}/>
             { editContactPopup && 
                 <EditPopUp selected={selected} allContacts={allContacts} chargeContacts={chargeContacts} setEditContactPopUp={setEditContactPopUp} />}
@@ -74,8 +76,9 @@ export const ListOfContacts = (props) => {
 }
 
 const Contact = (props) => {
+    
     return (
-        <li className="contact" onClick={() => props.setSelected(props.selected ? -1 : props.id)}>
+        <li className={props.selected ? "contact2" : "contact"} onClick={() => props.selected ? props.setSelected(-1) : props.setSelected(props.id)}>
             <h4>Nombre: {props.nombre}</h4>
             <br />
             <span>Mail: {props.mail}</span>
@@ -240,28 +243,28 @@ const OptionRender = (props) => {
 }
 
 const RenderPLacesOrClients = (props) => {
-const array = props.array
+    const array = props.array
 
-return( 
-    <select onChange={(e) => { 
-        if (props.workPlace === 'Cliente') {
-            props.setPlanta_id()
-            props.setCliente_id(`${e.target.value}`)
-        } else if (props.workPlace === 'Planta'){ 
-            props.setCliente_id()
-            props.setPlanta_id(`${e.target.value}`)
-        } }}>
-        <option  value=''>{`Seleccionar ${props.workPlace}:`}</option>
-        { array.map((option, key) => {
-            return ( <OptionRender 
-                nombre_fantasia={option.nombre_fantasia}
-                id={option.id}
-                key={key}
-                />
-            )
-        })
-        }
-    </select>)
+    return( 
+        <select onChange={(e) => { 
+            if (props.workPlace === 'Cliente') {
+                props.setPlanta_id()
+                props.setCliente_id(`${e.target.value}`)
+            } else if (props.workPlace === 'Planta'){ 
+                props.setCliente_id()
+                props.setPlanta_id(`${e.target.value}`)
+            } }}>
+            <option  value=''>{`Seleccionar ${props.workPlace}:`}</option>
+            { array.map((option, key) => {
+                return ( <OptionRender 
+                    nombre_fantasia={option.nombre_fantasia}
+                    id={option.id}
+                    key={key}
+                    />
+                )
+            })
+            }
+        </select>)
 }
 
 export default Contacts;
