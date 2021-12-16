@@ -3,8 +3,6 @@ import { useState } from 'react';
 import { CSSTransition } from 'react-transition-group'
 import { Link, useHistory } from "react-router-dom";
 
-
-
 import { ReactComponent as BellIcon } from '../Icons/Bell.svg';
 import { ReactComponent as MenuIcon } from '../Icons/Menu.svg';
 import { ReactComponent as AccountIcon } from '../Icons/Account.svg';
@@ -20,21 +18,20 @@ const Nav = (props) => {
     const [openDropdown, setDropdown] = useState(false)
     const [openNotification, setNotification] = useState(false)
 
-
     return (
-        <nav className="navbar">
-            {props.token && <div className="aside-icon" onClick={() => {
-                props.setAside(!props.openAside)
-                setTimeout(() => { props.setAside(false)}, 30000) 
-            }
-                }><ThreeDotsIcon/></div>}
-            <Link to='/'><img src={cuchmanSaiPhoto} alt="logo" id='logo'/></Link>
-           {props.token && <ul className="nav-navbar">
-                <NavItem icon={<BellIcon/>} open={openNotification} setOpen={setNotification} setClose={setDropdown}><NotificationsMenu/></NavItem>
-                <NavItem icon={<MenuIcon/>} open={props.openApplications} setOpen={props.setApplications} ></NavItem>
-                <NavItem icon={<AccountIcon/>} open={openDropdown} setOpen={setDropdown} setClose={setNotification}><DropdownMenu setToken={props.setToken} setDropdown={setDropdown} setApplications={props.setApplications}/></NavItem>
-            </ul>}
-        </nav>
+            <nav className="navbar">
+                {props.token && <div className="aside-icon" onClick={() => {
+                    props.setAside(!props.openAside)
+                    setTimeout(() => { props.setAside(false)}, 30000) 
+                }
+                    }><ThreeDotsIcon/></div>}
+                <Link to='/'><img src={cuchmanSaiPhoto} alt="logo" id='logo'/></Link>
+            {props.token && <ul className="nav-navbar">
+                    <NavItem icon={<BellIcon/>} open={openNotification} setOpen={setNotification} setClose={setDropdown}><NotificationsMenu/></NavItem>
+                    <NavItem icon={<MenuIcon/>} open={props.openApplications} setOpen={props.setApplications} ></NavItem>
+                    <NavItem icon={<AccountIcon/>} open={openDropdown} setOpen={setDropdown} setClose={setNotification}><DropdownMenu setToken={props.setToken} setDropdown={setDropdown} setApplications={props.setApplications}/></NavItem>
+                </ul>}
+            </nav>
     );
 
 
