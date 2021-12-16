@@ -99,4 +99,31 @@ router.post("/uploadPhoto", uploadPhoto.single("file"), async (req, res) => {
     }
   });
 
+
+router.put('/:id', verifyToken, async (req, res) => {
+  try {
+    const worker = await pool.query('SELECT * FROM workers WHERE id = $1', [req.params.id])
+
+    if (place.rowCount === 0) {
+      return res.json({success: false, message: 'Operario no encontrado.' + worker.rows}).status(400)
+    }
+
+    if ( req.body.adress !== worker[0].direccion || req.body.altaBps !== worker[0].alta_bps || req.body.bajaBps !== worker[0].baja_bps || req.body.bornDate !== worker[0].fecha_de_nacimiento || req.body.carnetS !== worker[0].carnet_de_salud ||  req.body.cel !== worker[0].celular || req.body.ci !== worker[0].ci || req.body.emergencyTel !== req.body.telefono_emergencia || req.body.mail !== req.body.mail || req.body.name !== worker[0].nombre_apellido || req.body.tel !== worker[0].telefono){
+      await pool.query('UPDATE operarios SET nombre_apellido = $1 , ci = $2 , fecha_de_nacimiento = $3 , direccion = $4 , celular = $5 , telefono_emergencia = $6, mail = $7 , alta_bps = $8 , baja_bps = $9 , carnet_de_salud = $10 , telefono = $11 WHERE id = $12', [req.body.name, req.body.id, req.body.bornDate, req.body.adress, req.body.cel, req.body.emergencyTel, req.body.mail, req.body.altaBps, req.body.bajaBps, req.body.carnetS, req.body.tel ])
+      
+      return res.json({ succes: true, message: 'Operario Actualizado Exitosamente.', array}).status(200)
+    
+    } else {
+      return res.json({success: false, message: 'No se han hecho cambios'}).status(400)
+    }
+
+    
+    
+    
+    
+  }catch(err) {
+    return res.json({ success: false, message: 'Error con la conexión con la Base de Datos' + JSON.stringify(err)}).status(500)
+  }
+})
+
 module.exports = router;

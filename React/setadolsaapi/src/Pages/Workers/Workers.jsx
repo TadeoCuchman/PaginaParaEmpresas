@@ -3,17 +3,14 @@ import { useState, useEffect } from 'react'
 
 const Workers = () => {
     const [allWorkers, setAllWorkers] = useState([])
-    const [editUserPopup, setEditUserPopUp] = useState(false)
+    const [editWorkerPopup, setEditWorkerPopUp] = useState(false)
     const [selected, setSelected] = useState(-1)
 
     useEffect(() => {
         chargeWorkers()
     }, [])
 
-    const handleSubmit = (event) => {
-        event.preventDefault();
-      };
-
+   
     const chargeWorkers = async () => {
         try{
             await fetch('http://localhost:3333/workers/allWorkers', {
@@ -29,95 +26,155 @@ const Workers = () => {
         }
     }
 
-    const Worker = (props) => {
-        return (
-            <li className="worker" onClick={() => setSelected(props.selected ? -1 : props.id)}>
-                <img src="" alt="" />
-                <h2>Nombre y Apellido: {props.name} </h2>
-                <br />
-                <span>Dirección: {props.adress}</span>
-                <br />
-                <span>Celular: {props.cel}</span>
-                <br />
-                <span>Teléfono: {props.tel}</span>
-                <br />
-                <span>Mail: {props.mail}</span>
-                <br />
-                <span>Teléfono de Emergencia: {props.emergencyTel}</span>
-                <br />
-                {props.selected &&
-                <>
-                <span>Alta BPS: {props.altaBps}</span>
-                <br />
-                <span>CI: {props.ci}</span>
-                <br />
-                <span>Fecha de Nacimiento: {props.bornDate}</span>
-                <br />
-                <span>Baja BPS: {props.bajaBps}</span>
-                <br />
-                <span>Carnet de Salud (vencimiento): {props.carnetS}</span>
-                <br />
-                <button>Edit</button>
-                </>
-                }
-            </li>
+   
+
+    
+
+    return (
+        <main>
+            <br />
+            <h1>Lista de Operarios:</h1>
+            <br />
+            <ListOfWorkers workers={allWorkers} selected={selected} setSelected={setSelected} setEditWorkerPopUp={setEditWorkerPopUp}/>
+            {editWorkerPopup && <EditPopUp allWorkers={allWorkers} selected={selected} setEditWorkerPopUp={setEditWorkerPopUp} chargeWorkers={chargeWorkers}/>}
+
+        </main>
+    )
+}
+
+
+const ListOfWorkers = (props) => {
+    const workers = props.workers
+
+    if (workers){
+        return(
+            <div id='workers'>
+                { workers.map(((worker, key) => {
+                    return (
+                        <Worker
+                            key={key}
+                            id={worker.id}
+                            name={worker.nombre_apellido}
+                            ci={worker.ci}
+                            bornDate={worker.fecha_de_nacimiento}
+                            adress={worker.direccion}
+                            cel={worker.celular}
+                            tel={worker.telefono}
+                            mail={worker.mail}
+                            altaBps={worker.alta_bps}
+                            bajaBps={worker.baja_bps}
+                            carnetS={worker.carnet_de_salud}
+                            emergencyTel={worker.telefono_emergencia}
+                            selected={worker.id === props.selected}
+                            setSelected={props.setSelected}
+                            setEditWorkerPopUp={props.setEditWorkerPopUp}
+
+                        />)
+                }))}
+
+            </div>
         )
     }
+}
 
-    const EditPopUp = () => {
-        const [name, setName] = useState('')
-        const [ci, setCi] = useState('')
-        const [bornDate, setBornDate] = useState('')
-        const [adress, setAdress] = useState('')
-        const [cel, setCel] = useState('')
-        const [tel, setTel] = useState('')
-        const [mail, setMail] = useState('')
-        const [altaBps, setAltaBps] = useState('')
-        const [bajaBps, setBajaBps] = useState(null)
-        const [carnetS, setCarnetS] = useState('')
-        const [emergencyTel, setEmergencyTel] = useState('')
+const Worker = (props) => {
+    return (
+        <li className="worker" onClick={() => props.setSelected(props.id)}>
+            <img src="" alt="" />
+            <h2>Nombre y Apellido: {props.name} </h2>
+            <br />
+            <span>Dirección: {props.adress}</span>
+            <br />
+            <span>Celular: {props.cel}</span>
+            <br />
+            <span>Teléfono: {props.tel}</span>
+            <br />
+            <span>Mail: {props.mail}</span>
+            <br />
+            <span>Teléfono de Emergencia: {props.emergencyTel}</span>
+            <br />
+            {props.selected &&
+            <>
+            <span>Alta BPS: {props.altaBps}</span>
+            <br />
+            <span>CI: {props.ci}</span>
+            <br />
+            <span>Fecha de Nacimiento: {props.bornDate}</span>
+            <br />
+            <span>Baja BPS: {props.bajaBps}</span>
+            <br />
+            <span>Carnet de Salud (vencimiento): {props.carnetS}</span>
+            <br />
+            <button onClick={() => props.setEditWorkerPopUp(true)}>Editar</button>
+            </>
+            }
+        </li>
+    )
+}
 
-        const modifyWorker = async (a) => {
-            const modifyBody = {
-                name,
-                ci,
-                bornDate,
-                adress,
-                cel,
-                tel,
-                mail,
-                altaBps,
-                bajaBps,
-                carnetS,
-                emergencyTel
-            }
-            try {
-            await fetch(`http://localhost:3333/users/${a}`, {
-                    method: 'PUT',
-                    headers: {
-                        "Content-Type" : "application/json",
-                        "auth-token" : localStorage.getItem("jwt")
-                    },body: JSON.stringify(modifyBody)
-                }).then((respuesta) => {
-                    return respuesta.json()
-                }).then(function (res) {
-                    if (!res.succes) {
-                        alert (res.message);
-                    }
-                }).then(() => { 
-                    chargeWorkers()
-                    setEditUserPopUp(false)
-                })
-            } catch (err) {
-                alert('Falló el Servidor')
-            }
+const EditPopUp = (props) => {
+    const WorkerId = props.selected
+
+    const result = props.allWorkers.find(worker => worker.id === WorkerId)
+
+    const [name, setName] = useState('' || result.nombre_apellido)
+    const [ci, setCi] = useState('' || result.ci)
+    const [bornDate, setBornDate] = useState('' || result.fecha_de_nacimiento)
+    const [adress, setAdress] = useState('' || result.direccion)
+    const [cel, setCel] = useState('' || result.celular)
+    const [tel, setTel] = useState('' || result.telefono)
+    const [mail, setMail] = useState('' || result.mail)
+    const [altaBps, setAltaBps] = useState('' || result.alta_bps)
+    const [bajaBps, setBajaBps] = useState('' || result.baja_bps)
+    const [carnetS, setCarnetS] = useState('' || result.carnet_de_salud)
+    const [emergencyTel, setEmergencyTel] = useState('' || result.telefono_emergencia)
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+      };
+
+
+    const modifyWorker = async (a) => {
+        const modifyBody = {
+            name,
+            ci: parseInt(ci),
+            bornDate,
+            adress,
+            cel,
+            tel,
+            mail,
+            altaBps,
+            bajaBps,
+            carnetS,
+            emergencyTel
         }
-        
-        return (
-            <div id="editUserPopUpDiv">
-                <button onClick={() => setEditUserPopUp(false)}>X</button>
-                <br />
-                <form action="PUT" onSubmit={handleSubmit}>
+        try {
+        await fetch(`http://localhost:3333/workers/${a}`, {
+                method: 'PUT',
+                headers: {
+                    "Content-Type" : "application/json",
+                    "auth-token" : localStorage.getItem("jwt")
+                },body: JSON.stringify(modifyBody)
+            }).then((respuesta) => {
+                return respuesta.json()
+            }).then(function (res) {
+                if (!res.succes) {
+                    alert (res.message);
+                }
+            }).then(() => { 
+                props.chargeWorkers()
+                props.setEditWorkerPopUp(false)
+            })
+        } catch (err) {
+            alert('Falló el Servidor' + err)
+        }
+    }
+    
+    return (
+        <div id="editWorkerPopUpDiv">
+            <button onClick={() => props.setEditWorkerPopUp(false)}>X</button>
+            <br />
+            <form action="PUT" onSubmit={handleSubmit}>
                 <span>Nombre y Appellido*:</span>
                 <input type="text" value={name} placeholder="Nombre y Appellido" onChange={(e) => setName(e.target.value) }/>
                 <br />
@@ -159,53 +216,12 @@ const Workers = () => {
                 <br />
                 <br />
                 <br />
-                    <input type="submit" id="submit" onClick = { () =>  modifyWorker(selected)} /> 
-                </form>
-            </div>
-        )
-    }
-
-    const ListOfWorkers = (props) => {
-        const workers = props.workers
-
-        if (workers){
-            return(
-                <div id='workers'>
-                    { workers.map(((worker, key) => {
-                        return (
-                            <Worker
-                                key={key}
-                                id={worker.id}
-                                name={worker.nombre_apellido}
-                                ci={worker.ci}
-                                bornDate={worker.fecha_de_nacimiento}
-                                adress={worker.direccion}
-                                cel={worker.celular}
-                                tel={worker.telefono}
-                                mail={worker.mail}
-                                altaBps={worker.alta_bps}
-                                bajaBps={worker.baja_bps}
-                                carnetS={worker.carnet_de_salud}
-                                emergencyTel={worker.telefono_emergencia}
-                                selected={worker.id === selected}
-
-                            />)
-                    }))}
-
-                </div>
-            )
-        }
-    }
-
-    return (
-        <main>
-            <br />
-            <h1>Lista de Operarios:</h1>
-            <br />
-            <ListOfWorkers workers={allWorkers}/>
-
-        </main>
+                <input type="submit" id="submit" onClick = {() =>  modifyWorker(WorkerId)} /> 
+            </form>
+        </div>
     )
 }
+
+
 
 export default Workers;
