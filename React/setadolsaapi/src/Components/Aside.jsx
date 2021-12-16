@@ -1,10 +1,15 @@
 import React from 'react';
 import { useState } from 'react';
+import { CSSTransition } from 'react-transition-group'
 import { Link } from 'react-router-dom'
 
 
 const Aside = () => {
+  const nodeRef = React.useRef(null)
+
+
     return (
+      <CSSTransition nodeRef={nodeRef} in={true} appear={true} timeout={2000} classNames="asideStyle">
         <aside>
             <div className="navSpace"></div>
             
@@ -20,6 +25,7 @@ const Aside = () => {
             <div className="navSpace"></div>
 
         </aside>
+      </CSSTransition >
     )
 }
     const AsideLinks = (props) => {
@@ -30,7 +36,12 @@ const Aside = () => {
             <AsideLink to='Plantas' goto='/Places'/>
             <AsideLink to='Operarios' goto='/Workers' />
             <AsideLink to='Stock' goto='/Stock' />
-            <AsideLi to='Trabajos'><AsideLink to='Trabajos en proceso' goto='/JobsInProcess'/><AsideLink to='Trabajos terminados' goto='/JobsDone'/></AsideLi>
+            <AsideLi to='Trabajos'>
+              <AsideLink to='Trabajos en proceso' goto='/JobsInProcess'/>
+              <AsideLink to='Trabajos terminados' goto='/ClosedJobs'/>
+              <AsideLink to='Trabajos facturados' goto='/FinishedJobs'/>
+            </AsideLi>
+            <AsideLink to='Info' goto='/Info'></AsideLink>
           </ul>
         )
       }
