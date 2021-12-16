@@ -1,26 +1,28 @@
 import React from 'react';
 import { useState, useEffect} from 'react';
     
-const Searcher = () => {
-    const [research, setResearch] = useState('')
+const Searcher = (props) => {
     const [data, setData] = useState([])
 
     useEffect(() => {
-        GoResearch()
-    }, [research])
+        setData(props.array)
+    },[])
 
-    const GoResearch = () => {
-        fetch(`http://localhost:3333/search/?search=${research}`)
-            .then(response => response.json())
-            .then(data => { setData(data.array) })
+    console.log(data)
+    
+
+    function search (word) {
+       const result = data.filter(object => object.nombre === word || object.nombre_fantasia === word)
+       
+       return (result)
     }
 
     return (
         <div>
-            <input type='text' id='searcher' placeholder='Research' onChange={(e) => {setResearch(e.target.value)}}/>
-            { (data.length > 0) && (research !== '') && 
+            <input type='text' id='searcher' placeholder='Research' onChange={(e) => setData(search(e.target.value))}/>
+            { (data.length > 0) && 
             <ul id='searched'>
-                { data.map((data, key) => { if (key < 8) return <li>{data.nombre.fantasia + ' | ' + data }</li>})}
+                { data.map((data, key) => { if (key < 8) return <li>{data.nombre_fantasia + data.nombre }</li>})}
             </ul>}
         </div>
     )

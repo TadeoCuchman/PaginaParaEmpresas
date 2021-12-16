@@ -1,6 +1,8 @@
 import React from 'react';
 import { useState, useEffect} from 'react'
 import { Link } from "react-router-dom";
+import Spiner from '../../Components/Spiner'
+import Searcher from '../../Components/Searcher'
 
 const Users = () => {
     const [allUsers, setAllUsers] = useState([])
@@ -16,7 +18,6 @@ const Users = () => {
         event.preventDefault();
       };
 
-    console.log(selected)
 
     const chargeUsers = async () => {
         try{
@@ -36,7 +37,7 @@ const Users = () => {
 
     const User = (props) => {
         return (
-            <li className="user" onClick={() => props.selected ? props.setSelected(-1) : props.setSelected(props.id)}>
+            <li className="user" onClick={() => props.setSelected(props.id)}>
                 <h4>Nombre: {props.name}</h4>
                 <br />
                 <span>Mail: {props.mail}</span>
@@ -139,7 +140,12 @@ const Users = () => {
         <main>
             <br />
             <h1>Lista de Usuarios:</h1>
+            <br />
+            <Searcher array={allUsers} />
+            <br />
+            {allUsers.length > 0 ?
             <ListOfUsers users={allUsers} />
+            : <Spiner/> }
             { editUserPopup && 
                 <EditPopUp selected={selected}/>}
         </main>

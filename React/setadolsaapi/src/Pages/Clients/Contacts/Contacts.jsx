@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useEffect} from 'react'
 import Searcher from '../../../Components/Searcher';
+import Spinner from '../../../Components/Spiner'
 
 const Contacts = () => {
 
@@ -13,6 +14,7 @@ const Contacts = () => {
     }, [])
     
     console.log(selected)
+
     const chargeContacts = async () => {
         try {
             await fetch('http://localhost:3333/contacts/allContacts', {
@@ -39,7 +41,10 @@ const Contacts = () => {
             <h1>Lista de Contactos:</h1>
             <br />
             <Searcher array={allContacts}/>
+            <br />
+            {allContacts.length > 0 ? 
             <ListOfContacts contacts={allContacts} setEditContactPopUp={setEditContactPopUp} setSelected={setSelected} selected={selected}/>
+            : <Spinner/>}
             { editContactPopup && 
                 <EditPopUp selected={selected} allContacts={allContacts} chargeContacts={chargeContacts} setEditContactPopUp={setEditContactPopUp} />}
                         
@@ -78,7 +83,7 @@ export const ListOfContacts = (props) => {
 const Contact = (props) => {
     
     return (
-        <li className={props.selected ? "contact2" : "contact"} onClick={() => props.selected ? props.setSelected(-1) : props.setSelected(props.id)}>
+        <li className={props.selected ? "contact2" : "contact"} onClick={() => props.setSelected(props.id)}>
             <h4>Nombre: {props.nombre}</h4>
             <br />
             <span>Mail: {props.mail}</span>

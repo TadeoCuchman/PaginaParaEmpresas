@@ -2,6 +2,8 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { Link } from "react-router-dom";
 import {ListOfContacts} from './Contacts/Contacts'
+import Spinner from '../../Components/Spiner'
+import Searcher from '../../Components/Searcher'
 
 const Clients = () => {
   const [allClients, setAllClients] = useState([])
@@ -166,7 +168,11 @@ const Clients = () => {
           <br />
           <h1>Lista de Clientes:</h1>
           <br />
+          <Searcher array={allClients}/>
+          <br />
+          {allClients.length > 0 ?
           <ListaOfClients clients={allClients}/>
+          : <Spinner/>}
           { editUserPopup && 
             <EditPopUp selected={selected}/>}
 

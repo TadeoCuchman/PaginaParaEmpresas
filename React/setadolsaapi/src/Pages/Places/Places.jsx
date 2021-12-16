@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState, useEffect} from 'react'
+import Spinner from '../../Components/Spiner'
+import Searcher from '../../Components/Searcher'
 
 const Places = () => {
     const [allPlaces, setAllPlaces] = useState([])
@@ -32,7 +34,12 @@ const Places = () => {
         <main>
             <br />
             <h1>Lista de Plantas:</h1>
+            <br />
+            <Searcher array={allPlaces}/>
+            <br />
+            {allPlaces.length > 0 ?
             <ListOfPlaces places={allPlaces} setEditPlacePopUp={setEditPlacePopUp} selected={selected} setSelected={setSelected} setSilosPopup={setSilosPopup}/>
+            : <Spinner/>}
             {editPlacePopup && 
                 <EditPopUpPlace selected={selected} allPlaces={allPlaces} chargePlaces={chargePlaces} setEditPlacePopUp={setEditPlacePopUp}/>}
         </main>

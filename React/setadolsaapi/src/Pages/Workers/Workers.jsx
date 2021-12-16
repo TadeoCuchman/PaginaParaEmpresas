@@ -1,5 +1,7 @@
 import React from 'react';
 import { useState, useEffect } from 'react'
+import Spiner from '../../Components/Spiner'
+import Searcher from '../../Components/Searcher'
 
 const Workers = () => {
     const [allWorkers, setAllWorkers] = useState([])
@@ -35,7 +37,11 @@ const Workers = () => {
             <br />
             <h1>Lista de Operarios:</h1>
             <br />
+            <Searcher array={allWorkers} />
+            <br />
+            {allWorkers.length > 0 ?
             <ListOfWorkers workers={allWorkers} selected={selected} setSelected={setSelected} setEditWorkerPopUp={setEditWorkerPopUp}/>
+            : <Spiner/>}
             {editWorkerPopup && <EditPopUp allWorkers={allWorkers} selected={selected} setEditWorkerPopUp={setEditWorkerPopUp} chargeWorkers={chargeWorkers}/>}
 
         </main>
