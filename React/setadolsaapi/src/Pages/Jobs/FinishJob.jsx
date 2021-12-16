@@ -2,7 +2,7 @@ import React from 'react';
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom";
 
-import { ListOfJobs } from "./JobsInProcess"
+import { ListOfJobs } from "./Views/JobsInProcess"
 
 const FinishJob = () => {
     const [allJobs, setAllJobs] = useState([])
