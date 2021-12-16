@@ -52,7 +52,7 @@ const Places = () => {
 
 const Place = (props) => {
     return (
-        <li className="place" onClick={() => props.setSelected(props.id) }>
+        <li className={props.selected ? "contact2" : "contact"} onClick={() => props.setSelected(props.id) }>
             <h2>Nombre Fantasia: {props.nombre_fantasia}</h2>
             <br />
             <span>Localidad: {props.localidad} </span>
@@ -80,7 +80,7 @@ const ListOfPlaces = (props) => {
     
     if (places){
         return(
-            <ul id='places'>
+            <ul id='contacts'>
                 { places.map(((place, key)=> {
                     return ( <Place
                         id={place.id}

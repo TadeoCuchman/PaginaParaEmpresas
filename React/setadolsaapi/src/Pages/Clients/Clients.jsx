@@ -62,7 +62,7 @@ const Clients = () => {
     
   const Client = (props) => {
     return (
-      <li className="client" onClick={() => props.setSelected(props.id)}>
+      <li className={props.selected ? "contact2" : "contact"} onClick={() => props.setSelected(props.id)}>
         <h2>Nombre Fantasia: {props.nombre_fantasia}</h2>
         <br />
         <span>Razón Social: {props.razon_social}</span>

@@ -76,3 +76,14 @@ aside {
 }
 
 /*  */
+
+@media (max-width: 414px) {
+  aside {
+    padding: 0;
+    width: 50%;
+  }
+
+  .midAside {
+    padding: 0;
+  }
+}

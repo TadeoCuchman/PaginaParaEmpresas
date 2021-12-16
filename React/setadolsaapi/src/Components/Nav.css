@@ -148,3 +148,11 @@ nav {
   transform: translateX(110%);
   transition: all var(--speed) ease;
 }
+
+/*  */
+
+@media (max-width: 414px) {
+  #logo {
+    display: none;
+  }
+}

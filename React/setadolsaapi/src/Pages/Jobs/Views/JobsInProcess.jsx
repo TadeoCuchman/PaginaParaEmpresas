@@ -2,6 +2,9 @@ import React from 'react';
 import { useState, useEffect } from "react"
 import { Link } from "react-router-dom";
 
+import Spiner from '../../../Components/Spiner'
+import Searcher from '../../../Components/Searcher';
+
 const JobsInProcess = () => {
     const [allJobs, setAllJobs] = useState([])
     const [selected, setSelected] = useState(-1)
@@ -30,7 +33,11 @@ const JobsInProcess = () => {
             <br />
             <h1>Trabajos en Proceso:</h1>
             <br />
+            <Searcher array={allJobs}/>
+            <br />
+            {allJobs.length > 0 ?
             <ListOfJobs jobs={allJobs} selected={selected} setSelected={setSelected}/>
+            : <Spiner/>}
         </main>
     )
 }

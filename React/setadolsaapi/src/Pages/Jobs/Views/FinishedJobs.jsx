@@ -3,6 +3,9 @@ import { Link } from "react-router-dom";
 import { ListOfJobs } from "./JobsInProcess"
 import { useState, useEffect } from "react"
 
+import Spiner from '../../../Components/Spiner'
+import Searcher from '../../../Components/Searcher';
+
 
 const FinishedJobs = () => {
     const [allJobs, setAllJobs] = useState([])
@@ -31,7 +34,11 @@ const FinishedJobs = () => {
             <br />
             <h1>Trabajos Facturados:</h1>
             <br />
+            <Searcher array={allJobs}/>
+            <br />
+            {allJobs.length > 0 ?
             <ListOfJobs jobs={allJobs} selected={selected} setSelected={setSelected}/>
+            : <Spiner/>}
         </main>
     )
 }

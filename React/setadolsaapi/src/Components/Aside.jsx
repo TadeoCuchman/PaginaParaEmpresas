@@ -9,7 +9,7 @@ const Aside = () => {
 
 
     return (
-      <CSSTransition nodeRef={nodeRef} in={true} appear={true} timeout={2000} classNames="asideStyle">
+      <CSSTransition nodeRef={nodeRef} in={true} appear={true} timeout={200} classNames="asideStyle">
         <aside>
             <div className="navSpace"></div>
             
@@ -54,7 +54,7 @@ const Aside = () => {
             <li className="asideLi" onClick = {() => {
                 cambiarOpen(!open)
                 setTimeout(() => { cambiarOpen(false)}, 30000)
-            }}>∞{props.to}</li>
+            }}>{open ? ' vv ' : ' ∞ '}{props.to}</li>
             {open && props.children}
             </>
         )

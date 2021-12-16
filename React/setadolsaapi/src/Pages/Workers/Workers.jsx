@@ -54,7 +54,7 @@ const ListOfWorkers = (props) => {
 
     if (workers){
         return(
-            <div id='workers'>
+            <div id='contacts'>
                 { workers.map(((worker, key) => {
                     return (
                         <Worker
@@ -85,7 +85,7 @@ const ListOfWorkers = (props) => {
 
 const Worker = (props) => {
     return (
-        <li className="worker" onClick={() => props.setSelected(props.id)}>
+        <li className={props.selected ? "contact2" : "contact"} onClick={() => props.setSelected(props.id)}>
             <img src="" alt="" />
             <h2>Nombre y Apellido: {props.name} </h2>
             <br />
