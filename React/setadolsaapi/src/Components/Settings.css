@@ -1,0 +1,18 @@
+#mainSettings {
+  display: grid;
+  justify-items: center;
+}
+
+#mainSettings div {
+  border: var(--border);
+  border-radius: var(--border-radius);
+  width: 80%;
+  justify-content: center;
+  margin-bottom: 5px;
+}
+
+#mainSettings input {
+  border-radius: var(--border-radius);
+  border: var(--border);
+  margin-bottom: 5px;
+}
