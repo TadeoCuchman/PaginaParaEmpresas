@@ -2,6 +2,9 @@
   "name": "setadolapi",
   "version": "1.0.0",
   "description": "Aplicación web para uso exclusivo de Setadol SA",
+  "engines": {
+    "node": "17.x"
+  },
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
