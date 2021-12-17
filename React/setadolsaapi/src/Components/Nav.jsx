@@ -58,11 +58,12 @@ const DropdownMenu = (props) => {
     
     const [activeMenu, setActiveMenu] = useState('main')
     const [menuHeight, setMenuHeight] = useState(null)
+    
+    const nodeRef = React.useRef(null)
 
     function calcHeight(el) {
         const height = el.offsetHeight;
         setMenuHeight(height + 30);
-        console.log(el)
     }
 
 
@@ -92,8 +93,10 @@ const DropdownMenu = (props) => {
                     history.push('/')
                     props.setDropdown(false)
                     props.closeApps(false)
-                }}>
+            }}>
+                
                 <span className="icon-button">{ props.leftIcon }</span>
+                <span>Salir</span>
             </div>
         )
     }
@@ -130,9 +133,9 @@ const DropdownMenu = (props) => {
                 >
                 <div className="menu">
                     <DropdownItem leftIcon={<RightArrowIcon/>} goToMenu="main"></DropdownItem>
-                    <DropdownItem>Configuración1</DropdownItem>
-                    <DropdownItem>Configuración2</DropdownItem>
-                    <DropdownItem>Configuración3</DropdownItem>
+                    <DropdownItem leftIcon={<ConfigIcon/>}><Link to='/Settings'>Mi Cuenta</Link></DropdownItem>
+                    <DropdownItem>Vistas</DropdownItem>
+                    <DropdownItem>Llamadas</DropdownItem>
                 </div>
             </CSSTransition>
         </div>

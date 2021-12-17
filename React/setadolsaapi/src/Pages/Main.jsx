@@ -8,13 +8,13 @@ const Main = (props) => {
     <main>
         <br />
         <br />
-        <h1 id='titulo'>Cuchman Servicios AgroIndustriales</h1>
+        <h1 id='titulo'>Cuchman Servicios Agro Industriales</h1>
         <br />
         {(openLogin === false) && (!props.token) &&
         <button id="login" onClick={() => setOpenLogin(true)}>Login</button>}
         {(openLogin === true) &&
           <div id="loginPopup">
-            <Login setOpenLogin={setOpenLogin} setToken={props.setToken} />
+            <Login setOpenLogin={setOpenLogin} setToken={props.setToken} setRol={props.setRol}/>
           </div>
         }
         <br />

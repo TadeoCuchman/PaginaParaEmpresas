@@ -2,24 +2,25 @@ import React from 'react';
 import { useState } from 'react';
 import { CSSTransition } from 'react-transition-group'
 import { Link } from 'react-router-dom'
+import unknown from '../photos/unknown.jpg'
 
 
-const Aside = () => {
+const Aside = (props) => {
   const nodeRef = React.useRef(null)
 
 
     return (
-      <CSSTransition nodeRef={nodeRef} in={true} appear={true} timeout={200} classNames="asideStyle">
+      <CSSTransition nodeRef={nodeRef} in={true} appear={true} timeout={200} unmountOnExit classNames="asideStyle">
         <aside>
             <div className="navSpace"></div>
             
             <div className="profilAside">
-                <span id='profilname'>{localStorage.alias}</span>
-                
+                <Link to='/MyProfile'><span id='profilname'>{localStorage.alias}</span></Link>
+                <img id='profilphoto' src={unknown} alt="default profile photo" />
             </div>
             
             <div className='midAside'>
-              <AsideLinks />
+              <AsideLinks rol={props.rol}/>
             </div>
         
             <div className="navSpace"></div>
@@ -34,14 +35,20 @@ const Aside = () => {
             <AsideLink to='Contactos' goto='./Contacts'/>
             <AsideLink to='Clientes' goto='/Clients'/>
             <AsideLink to='Plantas' goto='/Places'/>
-            <AsideLink to='Operarios' goto='/Workers' />
+            {props.rol == 'admin' &&
+            <AsideLink to='Operarios' goto='/Workers' />}
             <AsideLink to='Stock' goto='/Stock' />
+            {props.rol == 'admin' &&
+            <AsideLink to='Info' goto='/Info'></AsideLink>}
+            {props.rol == 'admin' &&
+            <AsideLink to='Gastos' goto='/Spences'></AsideLink>}
             <AsideLi to='Trabajos'>
               <AsideLink to='Trabajos en proceso' goto='/JobsInProcess'/>
-              <AsideLink to='Trabajos terminados' goto='/ClosedJobs'/>
-              <AsideLink to='Trabajos facturados' goto='/FinishedJobs'/>
+              {props.rol == 'admin' &&
+              <AsideLink to='Trabajos terminados' goto='/ClosedJobs'/>}
+              {props.rol == 'admin' &&
+              <AsideLink to='Trabajos facturados' goto='/FinishedJobs'/>}
             </AsideLi>
-            <AsideLink to='Info' goto='/Info'></AsideLink>
           </ul>
         )
       }

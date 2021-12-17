@@ -24,6 +24,14 @@ aside {
   border: var(--border);
 }
 
+#profilname {
+  color: white;
+}
+#profilphoto {
+  width: 40%;
+  border-radius: 50%;
+}
+
 .midAside {
   border: var(--border);
   overflow: scroll;
@@ -43,6 +51,7 @@ aside {
   margin-right: 40px;
   color: white;
   cursor: pointer;
+  padding-bottom: 10px;
 }
 
 .midAside ul li:hover {
@@ -55,11 +64,11 @@ aside {
 }
 
 /* CSSTransition classes  */
-.asideStyle-enter {
+.asideStyle-appear {
   opacity: 0.01;
   transform: translate(0, -10px);
 }
-.asideStyle-enter-active {
+.asideStyle-appear-done {
   opacity: 1;
   transform: translate(0, 0);
   transition: all 300ms ease-in-out;
@@ -80,7 +89,7 @@ aside {
 @media (max-width: 414px) {
   aside {
     padding: 0;
-    width: 50%;
+    width: 60%;
   }
 
   .midAside {

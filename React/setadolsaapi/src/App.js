@@ -19,6 +19,7 @@ import './Pages/Clients/Contacts/Contacts.css'
 import './Pages/Places/Places.css'
 import './Pages/Workers/Workers.css'
 import './Components/Spiner.css'
+import './Components/Settings.css'
 
 import Nav from './Components/Nav'
 import Aside from './Components/Aside'
@@ -45,8 +46,9 @@ import NewUser from './Pages/Users/NewUser'
 import Users from './Pages/Users/Users'
 import NewContact from './Pages/Clients/Contacts/NewContact'
 import Contacts from './Pages/Clients/Contacts/Contacts'
-import Spences from './Pages/Jobs/Spences'
+import Spences from './Pages/Info/Spences'
 import Info from './Pages/Info/Info'
+import Settings from './Components/Settings'
 
 if (typeof window.ethereum.autoRefreshOnNetworkChange !== "undefined") {
   window.ethereum.autoRefreshOnNetworkChange = false;
@@ -55,21 +57,22 @@ if (typeof window.ethereum.autoRefreshOnNetworkChange !== "undefined") {
 function App() {
   const [openAside, setAside] = useState(false);
   const [openApplications, setApplications] = useState(false)
-  const [token, setToken] = useState(localStorage.jwt)
+  const [token, setToken] = useState('')
+  const [rol, setRol] = useState('')
 
   return (
     <div className="App">
       <Router>
         
-        <Nav openAside={openAside} setAside={setAside} openApplications={openApplications} setApplications={setApplications} setToken={setToken} token={token} />
-        { openAside && <Aside/> }
-        { openApplications && <Applications setApplications={setApplications}/>}
+        <Nav openAside={openAside} setAside={setAside} openApplications={openApplications} setApplications={setApplications} setToken={setToken} token={token} rol={rol}/>
+        { openAside && <Aside rol={rol}/> }
+        { openApplications && <Applications rol={rol} setApplications={setApplications}/>}
         <Switch>
 
           {//inicio
           }
           <Route exact path='/'>
-            <Main token={token} setToken={setToken}/>
+            <Main token={token} rol={rol} setToken={setToken} setRol={setRol}/>
           </Route>
 
           {//registro y experiencia dentro de la app
@@ -77,47 +80,57 @@ function App() {
           <Route path='/MyProfile'>
             <MyProfile />
           </Route>
+          {rol == 'admin' &&
           <Route path='/NewUser'>
             <NewUser />
-          </Route>
+          </Route>}
+          {rol == 'admin' &&
           <Route path='/Users' >
             <Users />
+          </Route>}
+          <Route path='/Settings' >
+            <Settings />
           </Route>
 
          
           {//agregar a base de datos informacion externa para uno interno
           }
+          {rol == 'admin' &&
           <Route path='/NewContact'>
             <NewContact />
-          </Route>
+          </Route>}
           <Route path='/Contacts'>
             <Contacts />
           </Route>
           <Route path='/Clients'>
             <Clients />
           </Route>
+          {rol == 'admin' &&
           <Route path='/NewClient'>
             <NewClient />
-          </Route>
+          </Route>}
+          {rol == 'admin' &&
+          <Route path='/NewPlace'>
+            <NewPlace/>
+          </Route>}
+          {rol == 'admin' &&
+          <Route path='/NewWorker'>
+            <NewWorker />
+          </Route>}
           <Route path='/Places'>
             <Places />
           </Route>
-          <Route path='/NewPlace'>
-            <NewPlace/>
-          </Route>
-          <Route path='/NewWorker'>
-            <NewWorker />
-          </Route>
+          {rol == 'admin' &&
           <Route path='/Workers'>
             <Workers />
-          </Route>
+          </Route>}
          
           {//agregar a base de datos informacion para pedidos en tiempo real
           }
-
+          {rol == 'admin' &&
           <Route path='/NewJob'>
             <NewJob />
-          </Route>
+          </Route>}
           <Route path='/ChooseJob'>
             <ChooseJob />
           </Route>
@@ -127,36 +140,40 @@ function App() {
           <Route path='/JobsInProcess'>
             <JobsInProcess />
           </Route>
+          {rol == 'admin' &&
           <Route path='/CloseJob'>
             <CloseJob />
-          </Route>
+          </Route>}
+          {rol == 'admin' &&
           <Route path='/ClosedJobs'>
             <ClosedJobs />
-          </Route>
+          </Route>}
+          {rol == 'admin' &&
           <Route path='/FinishJob'>
             <FinishJob />
-          </Route>
+          </Route>}
+          {rol == 'admin' &&
           <Route path='/FinishedJobs'>
             <FinishedJobs />
-          </Route>
+          </Route>}
           
 
           {//base de datos al stock y a los gastos totales para informacion en tiempo real y registro
           }
+          {rol == 'admin' &&
           <Route path='/Spences'>
             <Spences />
-          </Route>
+          </Route>}
           <Route path='/Stock'>
             <Stock />
           </Route>
 
           {//Consumo, cálculo y visualización de datos
           }
+          {rol == 'admin' &&
           <Route path='/Info'>
             <Info />
-          </Route>
-
-
+          </Route>}
 
         </Switch>
       
