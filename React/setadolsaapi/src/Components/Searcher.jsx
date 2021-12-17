@@ -8,7 +8,6 @@ const Searcher = (props) => {
         setData(props.array)
     },[])
 
-    console.log(data)
     
 
     function search (word) {

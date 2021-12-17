@@ -16,7 +16,6 @@ const ChooseJob = (props) => {
     chargePlaces()
   }, [])
 
-  console.log(job)
 
   
   const chargeClients = async () => {

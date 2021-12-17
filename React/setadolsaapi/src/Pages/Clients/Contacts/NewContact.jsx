@@ -18,7 +18,7 @@ const NewContact = () => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-      };
+    };
     
 
     useEffect(() => {

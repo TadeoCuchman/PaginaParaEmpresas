@@ -57,8 +57,13 @@ const FinishJob = () => {
 
     return (
         <main>
-            <button onClick={() => finishJob(selected, allJobs)}>Facturar Trabajo</button>
+            <br />
+            <h1>Facturar trabajo:</h1>
+            {selected > 0 &&
+            <>
+            <button onClick={() => finishJob(selected, allJobs)}>Facturar</button>
             <span>{selected}</span>
+            </>}
             <ListOfJobs jobs={allJobs} selected={selected} setSelected={setSelected}/>
         </main>
     )

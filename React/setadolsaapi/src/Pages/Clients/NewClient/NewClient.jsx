@@ -5,31 +5,12 @@ import { Link } from "react-router-dom";
 const NewClient = () => {
   const [razon_social, setRazon_Social] = useState('')
   const [nombre_fantasia, setNombre_Fantasia] = useState('')
-  const [allClients, setAllClients] = useState([])
   const [rut, setRut] = useState('')
 
   const handleSubmit = (event) => {
     event.preventDefault();
   };
 
-  useEffect(() => {
-    chargeClients()
-}, [])
-
-  const chargeClients = async () => {
-    try {
-      await fetch('http://localhost:3333/clients/allClients', {
-        method: "GET",
-        headers: {
-            "Content-Type" : "application/json",
-            "auth-token" : localStorage.getItem("jwt")
-        },
-        }).then(response => response.json())
-        .then(data => setAllClients(data.array))
-    }catch (err) {
-      alert('No conexión con Servidor')
-    }
-  }
 
   const postNewClient = () => {
     const newClient = {

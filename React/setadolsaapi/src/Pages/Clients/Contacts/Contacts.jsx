@@ -13,7 +13,6 @@ const Contacts = () => {
         chargeContacts()
     }, [])
     
-    console.log(selected)
 
     const chargeContacts = async () => {
         try {

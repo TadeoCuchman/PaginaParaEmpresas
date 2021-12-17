@@ -4,7 +4,7 @@ const Spiner = (props) => {
 
     return (
         <div className="spinningContainer">
-            <div class="spinningCircle">
+            <div className="spinningCircle">
             </div>
         </div>
     )

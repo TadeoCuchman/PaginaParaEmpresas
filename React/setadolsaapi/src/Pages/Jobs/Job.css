@@ -41,10 +41,15 @@
   border-radius: var(--border-radius);
 }
 
-.info ul {
+#feed {
   display: grid;
   justify-content: start;
   justify-items: start;
+}
+
+#feed li {
+  border-bottom: 1px solid black;
+  padding-bottom: 10px;
 }
 
 .spendInfo {
@@ -144,13 +149,19 @@
 }
 
 .advertisement {
+  position: fixed;
   display: grid;
-  position: absolute;
-  width: 100%;
-  height: 85%;
   justify-items: center;
   align-items: center;
-  top: 80px;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
   background-color: #9c9da3c0;
-  overflow: auto;
+  overflow: fixed;
+}
+
+.advertisement div {
+  width: 300px;
+  height: 200px;
 }

@@ -12,7 +12,7 @@ router.delete('/:id', async (req, res) => {
 
   const user = await pool.query('DELETE ')
 
-  res.json({ success: true, message: 'Lista de uruarios:', usuarios })
+  res.json({ success: true, message: 'Lista de uruarios:' })
 });
 
 

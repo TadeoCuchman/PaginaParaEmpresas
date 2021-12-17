@@ -56,8 +56,13 @@ const CloseJob = () => {
 
     return (
         <main>
+            <br />
+            <h1>Cerrar trabajo:</h1>
+            {selected > 0 &&
+            <>
             <button onClick={() => closeJob(selected, allJobs)}>Cerrar Trabajo</button>
             <span>{selected}</span>
+            </>}
             <ListOfJobs jobs={allJobs} selected={selected} setSelected={setSelected}/>
         </main>
     )

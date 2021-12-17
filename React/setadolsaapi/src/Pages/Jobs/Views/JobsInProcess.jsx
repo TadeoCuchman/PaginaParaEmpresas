@@ -72,7 +72,7 @@ export const ListOfJobs = (props) => {
 const Job = (props) => {
 
     return (
-        <li className="contact" onClick={() => props.setSelected(props.id)}>
+        <li className={props.selected ? "contact2" : "contact"} onClick={() => props.setSelected(props.id)}>
             <h4>Tipo de Trabajo: {props.tipo_de_trabajo}</h4>
             <br />
             <span>Cliente: {props.cliente}</span>

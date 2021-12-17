@@ -492,12 +492,11 @@ const AddPopup = (props) => {
 const Advertisement = (props) => {
   return (
     <div className='advertisement'>
-      <>
+      <div>
         <h1>Seguro querés entregar el trabajo?</h1>
-        <br />
         <button onClick={() => props.openAdvertisment(false)}>Cancelar</button>
         <button onClick={() => props.deliverJob(props.id, props.jobInfo)}>Entregar</button>
-      </>
+      </div>
     </div>
   )
 }
